@@ -1,0 +1,99 @@
+/* ================== LAYOUT REGISTRO CUIDADOR ================== */
+
+.register-container {
+    background-color: var(--fondo); /* #EEE5E5 */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+/* Tarjeta Blanca Central */
+.register-card {
+    background-color: var(--cuadro-form); /* Blanco */
+    width: 100%;
+    max-width: 450px; /* Ancho estándar para formularios simples */
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+/* Cabecera */
+.register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.register-header h2 {
+    font-size: 1.8rem;
+    color: #000;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: var(--texto-form); /* Gris */
+    font-style: italic;
+}
+
+/* ================== FORMULARIO ================== */
+
+.form-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--texto-principal);
+    font-size: 0.9rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    background-color: var(--cuadro-fondo); /* #F5F5F5 */
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    color: #555;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--azul-claro);
+    background-color: #fff;
+}
+
+/* ================== BOTÓN FINALIZAR ================== */
+
+.btn-finalizar {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: var(--azul-fuerte); /* #00257A */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-finalizar:hover {
+    background-color: #001a5c;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .register-card {
+        padding: 2rem 1.5rem;
+    }
+}

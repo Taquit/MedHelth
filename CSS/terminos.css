@@ -1,0 +1,126 @@
+/* ================== LAYOUT PRINCIPAL ================== */
+.terms-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* Tarjeta Específica para Texto Legal */
+.terms-card {
+    background-color: var(--cuadro-form);
+    width: 100%;
+    max-width: 700px; /* Más ancho para lectura cómoda */
+    max-height: 85vh; /* Altura máxima relativa a la ventana */
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 37, 122, 0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================== CABECERA ================== */
+.terms-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    flex-shrink: 0; /* Evita que la cabecera se aplaste al hacer scroll */
+}
+
+.justify-center {
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: var(--azul-fuerte);
+    font-size: 1.5rem;
+}
+
+.terms-header h2 {
+    color: var(--azul-fuerte);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.terms-header p {
+    color: var(--texto-form);
+    font-size: 0.9rem;
+}
+
+/* ================== CONTENIDO DE TEXTO (SCROLL) ================== */
+.terms-content {
+    text-align: left;
+    overflow-y: auto; /* Scroll interno solo aquí */
+    padding-right: 1rem;
+    margin-bottom: 1.5rem;
+    color: var(--texto-principal);
+    line-height: 1.6;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    flex-grow: 1; /* Ocupa el espacio disponible */
+}
+
+.terms-content h3 {
+    color: var(--azul-fuerte);
+    font-size: 1.1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.terms-content h3:first-child {
+    margin-top: 0;
+}
+
+.terms-content p {
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.footer-note {
+    font-style: italic;
+    color: var(--texto-form);
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* Personalización Scrollbar (Chrome, Safari, Edge) */
+.terms-content::-webkit-scrollbar {
+    width: 8px;
+}
+.terms-content::-webkit-scrollbar-track {
+    background: var(--cuadro-fondo);
+    border-radius: 4px;
+}
+.terms-content::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+.terms-content::-webkit-scrollbar-thumb:hover {
+    background: var(--azul-claro);
+}
+
+/* ================== BOTONES ================== */
+.terms-actions {
+    display: flex;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.btn-back {
+    background-color: transparent;
+    border: 2px solid var(--azul-fuerte);
+    color: var(--azul-fuerte);
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: var(--azul-fuerte);
+    color: white;
+    transform: translateY(-2px);
+}

@@ -1,0 +1,100 @@
+/* ================== LAYOUT PRINCIPAL ================== */
+
+.forgot-container {
+    background-color: var(--fondo); /* #EEE5E5 */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* Tarjeta Blanca */
+.forgot-card {
+    background-color: var(--cuadro-form); /* Blanco */
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.forgot-title {
+    font-size: 1.8rem;
+    color: #000;
+    margin-bottom: 2.5rem;
+    font-weight: bold;
+}
+
+/* ================== FORMULARIO ================== */
+
+.form-group {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--texto-principal);
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid #ddd;
+    background-color: var(--cuadro-fondo); /* #F5F5F5 */
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    color: #555;
+}
+
+.form-group input:focus {
+    border-color: var(--azul-claro);
+    background-color: #fff;
+}
+
+/* Texto de Ayuda */
+.helper-text {
+    font-size: 0.85rem;
+    color: var(--texto-form); /* Gris */
+    margin-bottom: 2rem;
+    font-style: italic;
+}
+
+/* ================== BOTONES ================== */
+
+.btn-enviar {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: var(--azul-fuerte); /* #00257A */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-enviar:hover {
+    background-color: #001a5c;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    display: block;
+    margin-top: 1.5rem;
+    color: var(--azul-fuerte);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-cancel:hover {
+    text-decoration: underline;
+}

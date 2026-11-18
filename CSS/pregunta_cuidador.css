@@ -1,0 +1,94 @@
+/* ================== LAYOUT PRINCIPAL ================== */
+
+.question-container {
+    background-color: var(--fondo); /* #EEE5E5 */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* Tarjeta Blanca */
+.question-card {
+    background-color: var(--cuadro-form); /* Blanco */
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.question-card h2 {
+    font-size: 1.4rem;
+    color: #000;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+    font-weight: bold;
+}
+
+/* Caja de Texto "Propósito" */
+.purpose-box {
+    margin-bottom: 2.5rem;
+    color: var(--texto-form); /* Gris */
+    font-size: 0.9rem;
+    background-color: var(--cuadro-fondo); /* Fondo sutil para destacar */
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.purpose-box strong {
+    display: block;
+    color: var(--texto-principal);
+    margin-bottom: 0.3rem;
+}
+
+/* ================== BOTONES ================== */
+
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-yes, .btn-no {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-width: 100px; /* Ancho mínimo para uniformidad */
+    flex: 1; /* Que ocupen espacio proporcional */
+}
+
+.btn-yes:hover, .btn-no:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Estilo Botón SI (Azul Fuerte) */
+.btn-yes {
+    background-color: var(--azul-fuerte); /* #00257A */
+    color: white;
+}
+
+/* Estilo Botón NO (Azul Oscuro / Diferente para contraste) */
+.btn-no {
+    background-color: #001a5c; /* Un tono más oscuro */
+    color: white;
+}
+
+/* Responsive para móviles muy pequeños */
+@media (max-width: 400px) {
+    .button-group {
+        flex-direction: column;
+    }
+    .btn-yes, .btn-no {
+        width: 100%;
+    }
+}

@@ -1,0 +1,221 @@
+/* ================== NAVEGACIÓN (Base) ================== */
+.navbar {
+    background-color: var(--azul-fuerte);
+    color: white;
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.nav-item {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+}
+.nav-item:hover { color: white; }
+.nav-right .profile-link { display: flex; align-items: center; gap: 0.8rem; color: white; text-decoration: none; }
+.profile-text { font-weight: bold; font-size: 0.9rem; }
+
+/* Resaltar perfil en nav cuando estamos en esta página */
+.active-profile { opacity: 1; } 
+
+
+/* ================== LAYOUT PERFIL ================== */
+
+.profile-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    gap: 3rem; /* Espacio entre sidebar y tarjeta */
+    align-items: flex-start; /* Alinear al top */
+}
+
+/* --- Sidebar (Botones Izquierda) --- */
+.profile-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.sidebar-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--azul-fuerte);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.sidebar-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Estado activo (Datos Paciente) - Opcional: diferenciar color si se desea */
+.sidebar-btn.active {
+    background-color: #001a5c; /* Un tono más oscuro para indicar selección */
+    border: 2px solid var(--azul-claro); /* Borde sutil */
+}
+
+/* --- Tarjeta Principal --- */
+.profile-card {
+    background-color: var(--cuadro-form); /* Blanco */
+    flex-grow: 1;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.profile-card h2 {
+    text-align: center;
+    color: var(--texto-principal);
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+/* Distribución Interna: Avatar Izq - Form Der */
+.profile-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: center; /* Centrado verticalmente */
+}
+
+/* Columna Avatar */
+.avatar-column {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.avatar-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--texto-principal); /* Borde negro/gris como en la imagen */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--texto-principal);
+}
+
+/* Columna Formulario */
+.form-column {
+    flex-grow: 1;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+    color: var(--texto-form);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    background-color: var(--cuadro-fondo);
+    color: #555;
+    outline: none;
+}
+
+/* Agrupar Apellidos en una fila */
+.row-group {
+    display: flex;
+    gap: 1rem;
+}
+.row-group .form-group {
+    flex: 1;
+}
+
+/* Acciones Finales (Link y Botón) */
+.profile-actions {
+    display: flex;
+    justify-content: space-between; /* Link a la izq, Botón a la der */
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+}
+
+.link-password {
+    color: var(--texto-form);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+.link-password:hover { text-decoration: underline; }
+
+.btn-logout {
+    background-color: var(--azul-fuerte);
+    color: white;
+    text-decoration: none;
+    padding: 0.7rem 2rem;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+}
+.btn-logout:hover {
+    background-color: #001a5c;
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 768px) {
+    .profile-container {
+        flex-direction: column; /* Sidebar arriba, contenido abajo */
+        gap: 1.5rem;
+    }
+
+    .profile-sidebar {
+        width: 100%;
+        flex-direction: row; /* Botones horizontales en móvil */
+        justify-content: center;
+    }
+    
+    .sidebar-btn {
+        width: auto;
+        flex: 1;
+    }
+
+    .profile-layout {
+        flex-direction: column; /* Avatar arriba, form abajo */
+    }
+
+    .row-group {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .profile-actions {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+}

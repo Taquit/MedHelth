@@ -1,0 +1,233 @@
+/* ================== NAVEGACIÓN ================== */
+.navbar {
+    background-color: var(--azul-fuerte);
+    color: white;
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.nav-item {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s;
+    padding-bottom: 4px;
+}
+.nav-item:hover, .nav-item.active {
+    color: white;
+    border-bottom: 2px solid var(--azul-claro);
+}
+.nav-right .profile-link {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: white;
+    text-decoration: none;
+}
+.profile-text { font-weight: bold; font-size: 0.9rem; }
+
+
+/* ================== LAYOUT MEDICAMENTOS ================== */
+
+.meds-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    width: 100%;
+    flex-grow: 1;
+}
+
+/* --- Botón Agregar --- */
+.top-action {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem; /* Espacio moderado */
+}
+
+.btn-add-med {
+    background-color: var(--azul-fuerte);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 1rem 3rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, background-color 0.2s;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-add-med:hover {
+    background-color: #001a5c;
+    transform: translateY(-2px);
+}
+
+/* --- Grid de Tarjetas --- */
+.meds-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 1.5rem;
+}
+
+/* Estilo Individual de la Tarjeta (Compacto) */
+.med-item-card {
+    background-color: var(--cuadro-form); /* Blanco */
+    border-radius: 8px;
+    padding: 1.5rem 1.5rem; /* Padding reducido para ser más pequeño */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Empuja los botones al final */
+}
+
+.med-item-card h3 {
+    color: var(--texto-principal);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+/* Detalles alineados a la izquierda */
+.med-details {
+    text-align: left;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.med-details p {
+    margin-bottom: 0.5rem;
+    color: var(--texto-principal);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.med-details strong {
+    color: #000;
+    font-weight: bold;
+    margin-right: 0.3rem;
+}
+
+/* ================== BOTONES DE ACCIÓN (Estilo Sólido) ================== */
+
+.card-actions {
+    display: flex;
+    gap: 1rem;          /* Espacio entre los botones */
+    margin-top: auto;   /* Empuja los botones al final de la tarjeta */
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f0; /* Línea sutil separadora */
+}
+
+/* Estilo Base para ambos botones */
+.btn-card-action {
+    flex: 1;            /* Ambos ocupan el mismo ancho (50%) */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;        /* Espacio entre ícono y texto */
+    padding: 0.7rem;    /* Relleno cómodo */
+    border-radius: 8px; /* Bordes redondeados */
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombrita suave */
+    cursor: pointer;
+}
+
+/* Efecto al presionar (Click) */
+.btn-card-action:active {
+    transform: scale(0.98);
+    box-shadow: none;
+}
+
+/* --- Botón EDITAR (Azul Corporativo) --- */
+.btn-edit {
+    background-color: var(--azul-fuerte); /* #00257A */
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #001a5c; /* Un azul un poco más oscuro */
+    transform: translateY(-2px); /* Se eleva un poco */
+    box-shadow: 0 4px 8px rgba(0, 37, 122, 0.2);
+}
+
+/* --- Botón ELIMINAR (Rojo Alerta) --- */
+.btn-delete {
+    background-color: #dc3545; /* Rojo estándar de UI */
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #c82333; /* Rojo más oscuro */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.btn-card-action:hover {
+    transform: translateY(-2px);
+}
+
+/* Estilo Editar (Azul Claro) */
+.btn-edit {
+    background-color: #e3f2fd;
+    color: var(--azul-fuerte);
+    border: 1px solid var(--azul-fuerte);
+}
+.btn-edit:hover {
+    background-color: var(--azul-fuerte);
+    color: white;
+}
+
+/* Estilo Eliminar (Rojo Alerta) */
+.btn-delete {
+    background-color: #ffebee;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 768px) {
+    .meds-grid {
+        grid-template-columns: 1fr; /* 1 columna en móvil */
+    }
+    
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .nav-links {
+        position: static;
+        transform: none;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .nav-right {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}

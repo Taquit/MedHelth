@@ -1,0 +1,150 @@
+/* ================== NAVEGACIÓN ================== */
+.navbar {
+    background-color: var(--azul-fuerte);
+    color: white;
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 1; /* Detrás del overlay */
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.nav-item {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+}
+.nav-right .profile-link { display: flex; align-items: center; gap: 0.8rem; color: white; text-decoration: none; }
+.profile-text { font-weight: bold; font-size: 0.9rem; }
+.active-profile { opacity: 1; } 
+
+
+/* ================== OVERLAY Y MODAL ================== */
+
+.overlay-container {
+    position: fixed; /* Fija sobre toda la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Encima de todo */
+    padding: 1rem;
+}
+
+.modal-card {
+    background-color: var(--cuadro-form); /* Blanco */
+    width: 100%;
+    max-width: 450px; /* Ancho compacto */
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 37, 122, 0.2);
+    position: relative; /* Para posicionar la X */
+    animation: popIn 0.3s ease-out; /* Animación de entrada */
+}
+
+/* Animación de aparición */
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Botón de Cierre (X) */
+.close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    text-decoration: none;
+    color: var(--texto-form);
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.close-btn:hover { color: var(--rojo); }
+
+
+/* ================== FORMULARIO ================== */
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.modal-header h2 {
+    color: var(--texto-principal);
+    font-size: 1.6rem;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    color: var(--texto-principal);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #eee; /* Borde muy sutil */
+    background-color: var(--cuadro-fondo); /* F5F5F5 */
+    color: var(--texto-principal);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--azul-claro);
+    background-color: #fff;
+}
+
+.form-group input::placeholder {
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+/* Botón Finalizar */
+.form-actions {
+    margin-top: 2rem;
+}
+
+.btn-save {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: var(--azul-fuerte);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-save:hover {
+    background-color: #001a5c;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar { display: none; } /* Ocultar navbar en móvil para limpiar */
+}

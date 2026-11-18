@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación - Cuidate+</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/dashboard.css">
+    <link rel="stylesheet" href="../CSS/notificaciones.css">
+</head>
+<body>
+
+    <div class="background-content">
+        <nav class="navbar">
+            <div class="logo">
+                <img src="../Recursos/logo.png" alt="Logo Cuidate+">
+                Cuidate+
+            </div>
+            <div class="nav-links">
+                <a href="dashboard.php" class="nav-item active">INICIO</a>
+                <a href="medicamentos.php" class="nav-item">MEDICAMENTOS</a>
+                <a href="historial.php" class="nav-item">HISTORIAL</a>
+            </div>
+            <div class="nav-right">
+                <a href="perfil.php" class="profile-link">
+                    <span class="profile-text">PERFIL</span>
+                    <div class="profile-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    </div>
+                </a>
+            </div>
+        </nav>
+
+        <main class="dashboard-container">
+            <header class="dashboard-header">
+                <h1>¡ Hola !</h1>
+                <p class="date-display">Hoy es XX de Octubre del 2025</p>
+                <h2>Medicamentos del día de hoy</h2>
+            </header>
+            <section class="medication-list">
+                <article class="med-card">
+                    <div class="med-info">
+                        <div class="med-title-row"><h3>Nombre del Medicamento</h3></div>
+                        <div class="med-details-grid"><p><strong>Dosis:</strong> 1/2 tableta</p></div>
+                    </div>
+                    <aside class="med-actions"><h4>Confirmación</h4></aside>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <div class="notification-overlay">
+        <div class="notification-card">
+            <div class="icon-container success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+
+            <h3>Medicina tomada</h3>
+
+            <a href="dashboard.php" class="btn-exit">Salir</a>
+        </div>
+    </div>
+
+</body>
+</html>

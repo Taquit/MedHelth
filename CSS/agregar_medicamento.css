@@ -1,0 +1,171 @@
+/* ================== LAYOUT MODAL / OVERLAY ================== */
+
+/* Contenedor que simula el fondo oscurecido */
+.overlay-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: rgba(0, 0, 0, 0.05); /* Sutil oscurecimiento sobre el fondo base */
+    min-height: 80vh;
+}
+
+/* La tarjeta central (Modal) */
+.modal-card {
+    background-color: var(--cuadro-form);
+    width: 100%;
+    max-width: 500px; /* Ancho contenido similar a la imagen */
+    padding: 2rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 37, 122, 0.15);
+    position: relative; /* Para posicionar la X */
+}
+
+/* Botón de cierre (X) */
+.close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    text-decoration: none;
+    color: var(--texto-form);
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: var(--rojo);
+}
+
+/* ================== FORMULARIO ================== */
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.modal-header h2 {
+    color: var(--texto-principal);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+.form-group label {
+    display: block;
+    color: var(--texto-principal); /* Texto negro/gris oscuro según diseño */
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+}
+
+/* Estilos generales de Inputs */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    border: none; /* El diseño parece no tener bordes fuertes, solo fondo */
+    background-color: var(--cuadro-fondo); /* F5F5F5 */
+    color: var(--texto-form);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.form-group input::placeholder {
+    color: #b0b0b0;
+}
+
+/* Inputs divididos (Para Frecuencia y Duración) */
+.split-inputs {
+    display: flex;
+    gap: 1rem;
+}
+
+.input-short {
+    flex: 1; /* Ocupa menos espacio */
+}
+
+.input-medium {
+    flex: 2; /* Ocupa más espacio */
+    cursor: pointer;
+}
+
+/* Botón Agregar */
+.form-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.btn-agregar {
+    background-color: var(--azul-fuerte); /* Azul oscuro del botón */
+    color: white;
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-agregar:hover {
+    background-color: #001a5c;
+    transform: translateY(-2px);
+}
+
+/* ================== RESPONSIVE ================== */
+@media (max-width: 480px) {
+    .modal-card {
+        padding: 1.5rem;
+    }
+    
+    .split-inputs {
+        gap: 0.5rem;
+    }
+}
+
+/* Copia de estilos de Navbar para que se vea igual que en medicamentos.html */
+.navbar {
+    background-color: var(--azul-fuerte);
+    color: white;
+    padding: 0.8rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    position: relative;
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.nav-item {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+}
+.nav-item.active {
+    color: white;
+    border-bottom: 2px solid var(--azul-claro);
+}
+.nav-right .profile-link {
+    display: flex; align-items: center; gap: 0.8rem; color: white; text-decoration: none;
+}
+.profile-text { font-weight: bold; font-size: 0.9rem; }
+
+@media (max-width: 768px) {
+    .navbar { flex-direction: column; gap: 1rem; padding-bottom: 1rem; }
+    .nav-links { position: static; transform: none; width: 100%; justify-content: center; }
+    .nav-right { width: 100%; display: flex; justify-content: center; }
+}

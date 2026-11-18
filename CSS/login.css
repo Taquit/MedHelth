@@ -1,0 +1,105 @@
+/* ================== LAYOUT LOGIN ================== */
+
+/* Centrado vertical y horizontal */
+.login-container {
+    background-color: var(--fondo); /* Color EEE5E5 */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+/* Tarjeta Blanca */
+.login-card {
+    background-color: var(--cuadro-form); /* Color FFFFFF */
+    width: 100%;
+    max-width: 400px;
+    padding: 3rem 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+.login-title {
+    font-size: 1.8rem;
+    color: #000;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+
+/* ================== FORMULARIO ================== */
+
+.form-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--texto-principal);
+    font-size: 0.95rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    background-color: var(--cuadro-fondo); /* Color F5F5F5 */
+    border-radius: 8px;
+    font-size: 1rem;
+    outline: none;
+    color: #555;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: var(--azul-claro);
+    background-color: #fff;
+}
+
+/* ================== ENLACES (Links Row) ================== */
+
+/* Contenedor flex para separar los links a los extremos */
+.links-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    margin-top: 0.5rem;
+}
+
+.link-nav {
+    text-decoration: none;
+    color: var(--texto-form); /* Color 808080 */
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.link-nav:hover {
+    color: var(--azul-fuerte);
+    text-decoration: underline;
+}
+
+/* ================== BOTÓN INGRESAR ================== */
+
+.btn-ingresar {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: var(--azul-fuerte); /* Color 00257A */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-ingresar:hover {
+    background-color: #001a5c;
+    transform: translateY(-2px);
+}

@@ -1,0 +1,76 @@
+/* ================== OVERLAY OSCURO ================== */
+.confirmation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo negro semitransparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Por encima de todo */
+    backdrop-filter: blur(2px); /* Opcional: desenfoca levemente el fondo */
+}
+
+/* ================== TARJETA DE CONFIRMACIÓN ================== */
+.confirm-card {
+    background-color: var(--cuadro-form); /* Blanco */
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 37, 122, 0.2);
+    text-align: center;
+    width: 90%;
+    max-width: 400px; /* Tamaño compacto */
+    animation: scaleUp 0.3s ease-out;
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.confirm-card h3 {
+    color: var(--texto-principal);
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* ================== BOTONES ================== */
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem; /* Espacio entre botones */
+}
+
+.btn-confirm {
+    text-decoration: none;
+    padding: 0.8rem 2.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+    min-width: 100px;
+}
+
+.btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Estilo Botón "Sí" - Azul Claro/Fuerte según diseño */
+.btn-yes {
+    background-color: var(--azul-fuerte); /* 00257A */
+    color: white;
+}
+
+/* Estilo Botón "No" - Azul Oscuro diferente para contraste */
+.btn-no {
+    background-color: #001a5c; /* Un tono más oscuro casi negro */
+    color: white;
+    /* O si prefieres usar el rojo para "No" como acción negativa: */
+    /* background-color: var(--azul-fuerte); pero con opacidad u otro tono */
+}

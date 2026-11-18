@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Cuidate+</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/olvide_contrasena.css">
+</head>
+<body>
+
+    <main class="forgot-container">
+        <div class="forgot-card">
+            <h2 class="forgot-title">Olvide mi contraseña</h2>
+
+            <form action="../controllers/solicitar_recuperacion.php" method="POST">
+                <div class="form-group">
+                    <label for="email">Escribe tu correo</label>
+                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <p class="helper-text">- Se te enviara un correo con tu contraseña</p>
+
+                <button type="submit" class="btn-enviar">Enviar</button>
+                <a href="login.html" class="btn-cancel">Cancelar / Volver</a>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cuidador - Cuidate+</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+    <link rel="stylesheet" href="../CSS/registro_cuidador_inicial.css">
+</head>
+<body>
+
+    <main class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <h2>Registro del cuidador</h2>
+                <p class="subtitle">* Datos de contacto y acceso del cuidador</p>
+            </div>
+
+            <form action="../controllers/registrar_cuidador.php" method="POST">
+                <div class="form-group">
+                    <label for="nombre">Nombre(s)</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ingresa nombre del cuidador" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="paterno">Apellido Paterno</label>
+                    <input type="text" id="paterno" name="paterno" placeholder="Ingresa apellido paterno" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="materno">Apellido Materno</label>
+                    <input type="text" id="materno" name="materno" placeholder="Ingresa apellido materno">
+                </div>
+
+                <div class="form-group">
+                    <label for="parentesco">Relación con el paciente</label>
+                    <input type="text" id="parentesco" name="parentesco" placeholder="Ej. Hijo, Enfermera, Nieto" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono de contacto</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="Ingresa número telefónico" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña Temporal</label>
+                    <input type="password" id="password" name="password" placeholder="Crea una contraseña" required>
+                </div>
+
+                <button type="submit" class="btn-finalizar">Finalizar registro</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
