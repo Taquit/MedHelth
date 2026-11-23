@@ -1,0 +1,26 @@
+[
+  {
+    "id_receta": 1,
+    "id_paciente": 1,
+    "fecha_emision": "2026-10-01",
+    "observaciones": "Tratamiento de control cronico para hipertension arterial sistematica y diabetes tipo 2."
+  },
+  {
+    "id_receta": 2,
+    "id_paciente": 1,
+    "fecha_emision": "2026-11-01",
+    "observaciones": "Control de perfil lipidico y cardioproteccion preventiva."
+  },
+  {
+    "id_receta": 3,
+    "id_paciente": 2,
+    "fecha_emision": "2026-10-15",
+    "observaciones": "Manejo posquirurgico ortopedico y analgesia escalonada."
+  },
+  {
+    "id_receta": 4,
+    "id_paciente": 3,
+    "fecha_emision": "2026-11-05",
+    "observaciones": "Tratamiento inmunomodulador para artritis reumatoide y soporte osteoarticular."
+  }
+]

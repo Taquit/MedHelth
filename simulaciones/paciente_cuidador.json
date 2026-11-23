@@ -1,0 +1,37 @@
+[
+  {
+    "id_relacion": 1,
+    "id_paciente": 1,
+    "id_cuidador": 1,
+    "fecha_inicio": "2026-01-10",
+    "fecha_fin": null
+  },
+  {
+    "id_relacion": 2,
+    "id_paciente": 2,
+    "id_cuidador": 2,
+    "fecha_inicio": "2026-02-01",
+    "fecha_fin": null
+  },
+  {
+    "id_relacion": 3,
+    "id_paciente": 1,
+    "id_cuidador": 3,
+    "fecha_inicio": "2026-03-01",
+    "fecha_fin": null
+  },
+  {
+    "id_relacion": 4,
+    "id_paciente": 2,
+    "id_cuidador": 3,
+    "fecha_inicio": "2026-03-01",
+    "fecha_fin": null
+  },
+  {
+    "id_relacion": 5,
+    "id_paciente": 3,
+    "id_cuidador": 1,
+    "fecha_inicio": "2025-06-01",
+    "fecha_fin": "2025-12-31"
+  }
+]

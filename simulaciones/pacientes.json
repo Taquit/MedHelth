@@ -1,0 +1,26 @@
+[
+  {
+    "id_paciente": 1,
+    "id_usuario": 1,
+    "nombre": "Maria",
+    "apellido_paterno": "Gonzalez",
+    "apellido_materno": "Perez",
+    "telefono": "5512345678"
+  },
+  {
+    "id_paciente": 2,
+    "id_usuario": 2,
+    "nombre": "Carlos",
+    "apellido_paterno": "Ruiz",
+    "apellido_materno": "Morales",
+    "telefono": "5587654321"
+  },
+  {
+    "id_paciente": 3,
+    "id_usuario": 5,
+    "nombre": "Elena",
+    "apellido_paterno": "Vargas",
+    "apellido_materno": "Tellez",
+    "telefono": "5533445566"
+  }
+]

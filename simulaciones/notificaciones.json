@@ -1,0 +1,92 @@
+[
+  {
+    "id_notificacion": 1,
+    "id_medicamento": 1,
+    "id_toma": 1,
+    "fecha_hora_programada": "2026-11-15 08:00:00",
+    "pospuesta_veces": 0,
+    "estado_alerta": "atendida",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 2,
+    "id_medicamento": 2,
+    "id_toma": 2,
+    "fecha_hora_programada": "2026-11-15 13:00:00",
+    "pospuesta_veces": 0,
+    "estado_alerta": "atendida",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 3,
+    "id_medicamento": 1,
+    "id_toma": 3,
+    "fecha_hora_programada": "2026-11-15 20:00:00",
+    "pospuesta_veces": 1,
+    "estado_alerta": "atendida",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 4,
+    "id_medicamento": 3,
+    "id_toma": 4,
+    "fecha_hora_programada": "2026-11-15 21:00:00",
+    "pospuesta_veces": 0,
+    "estado_alerta": "atendida",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 5,
+    "id_medicamento": 1,
+    "id_toma": 9,
+    "fecha_hora_programada": "2026-11-17 08:00:00",
+    "pospuesta_veces": 0,
+    "estado_alerta": "atendida",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 6,
+    "id_medicamento": 2,
+    "id_toma": null,
+    "fecha_hora_programada": "2026-11-17 13:00:00",
+    "pospuesta_veces": 0,
+    "estado_alerta": "pendiente",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 7,
+    "id_medicamento": 1,
+    "id_toma": null,
+    "fecha_hora_programada": "2026-11-17 20:00:00",
+    "pospuesta_veces": 0,
+    "estado_alerta": "pendiente",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 8,
+    "id_medicamento": 3,
+    "id_toma": null,
+    "fecha_hora_programada": "2026-11-17 21:00:00",
+    "pospuesta_veces": 0,
+    "estado_alerta": "pendiente",
+    "notificar_cuidador": 0
+  },
+  {
+    "id_notificacion": 9,
+    "id_medicamento": 5,
+    "id_toma": 12,
+    "fecha_hora_programada": "2026-11-16 21:00:00",
+    "pospuesta_veces": 2,
+    "estado_alerta": "vencida",
+    "notificar_cuidador": 1
+  },
+  {
+    "id_notificacion": 10,
+    "id_medicamento": 4,
+    "id_toma": null,
+    "fecha_hora_programada": "2026-11-17 07:00:00",
+    "pospuesta_veces": 2,
+    "estado_alerta": "pospuesta",
+    "notificar_cuidador": 0
+  }
+]

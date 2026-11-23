@@ -1,80 +1,83 @@
 # Diagnóstico y Plan de Refactorización (EGM - Etapa 1 y Ajustes Etapa 2)
 
-## 1. Diagnóstico Arquitectónico de la Carpeta Root (`/`)
+## Parte I. Refactorización Backend y Estructura (Completada)
 
-Tras analizar la totalidad de los archivos en la raíz del proyecto (`care_sis`), así como los subdirectorios `config/`, `models/`, y `controllers/`, y tras incorporar los hallazgos de la **Auditoría Goldfish (Etapa 2)**, se consolidan los siguientes problemas y soluciones de diseño:
-
-### A. Duplicación de Capa de Datos y Archivos Huérfanos (Código Muerto)
-- **Doble conector de Base de Datos**: Conviven [conexion.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/conexion.php) (basado en `mysqli`) y [config/Database.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/config/Database.php) (basado en `PDO`). Toda la arquitectura activa utiliza `PDO` a través de `config/Database.php`.
-- **Scripts legacy en raíz**: [insertar_medicamento.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/insertar_medicamento.php) y [registrar_usuario.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/registrar_usuario.php) utilizan `conexion.php` (`mysqli`) y han sido completamente reemplazados por [controllers/guardar_medicamento.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/controllers/guardar_medicamento.php) y [controllers/registrar_paciente.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/controllers/registrar_paciente.php).
-- **Controlador roto / huérfano**: [controllers/guardar_cuidador_interno.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/controllers/guardar_cuidador_interno.php) invoca un método inexistente `$cuidador->registrar(...)` en la clase `Cuidador` (el flujo real usa [controllers/registrar_cuidador.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/controllers/registrar_cuidador.php)).
-- **Maquetas HTML obsoletas**: [template.html](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/template.html) y [registro_cuidador.html](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/registro_cuidador.html) son prototipos estáticos previos a la migración a PHP (reemplazados por [alta_cuidador.php](file:///home/ruben/Documents/IPN/quinto_sem/Ing_Softw/proyecto/care_sis/alta_cuidador.php)).
-
-### B. Duplicación Masiva en Vistas y Controladores (Violación de DRY)
-- **Verificación de sesión y obtención de Paciente Activo**: Se repite la lógica de inicio de sesión, conexión a BD y consulta de `Paciente::leerPorUsuario()` en vistas y controladores.
-- **Conversión de Unidades de Tiempo (Frecuencia y Duración)**: Duplicada entre `controllers/guardar_medicamento.php`, `controllers/actualizar_medicamento.php` y `editar_medicamento.php`.
-- **Formateo de Fechas en Español**: El arreglo `$meses` y el formateo manual se repite en `dashboard.php`, `historial.php` y `perfil_cuidador.php`.
-- **Componentes UI repetidos**: La barra de navegación (`<nav class="navbar">`) y el pie de página (`<footer class="footer">`) están copiados en cada vista principal.
-
-### C. Enlaces Rotos, Bugs Funcionales y Brechas de Seguridad (Ajustado con Auditoría Goldfish)
-- **Rutas hardcodeadas a carpeta inexistente `../ADS/`**: En `dashboard.php`, `notificacion_posponer.html`, `notificacion_tomada.html` y `pregunta_cuidador.html`.
-- **Enlaces a `.html` inexistentes en lugar de `.php`**: En `agregar_medicamento.php`, `editar_medicamento.php`, `reporte.php` (`historial.html` y `perfil.html`), y `registro_paciente.html` (`terminos.html`).
-- **Correo del cuidador ignorado en vista**: En `perfil_cuidador.php`, `$activo['correo']` ya viene del `JOIN` en `Cuidador::obtenerActivo()`, pero se mostraba `"registrado@cuidate.com"`.
-- **Vulnerabilidad IDOR en Medicamentos y Tomas**: `Medicamento::leerUno()`, `Medicamento::actualizar()`, `Medicamento::eliminar()` y `controllers/registrar_toma.php` operaban sin validar que el `id_medicamento` pertenezca al `id_paciente` autenticado a través de la tabla `recetas`.
-- **Flujo de registro inicial de cuidador (`registrar_paciente.php` -> `pregunta_cuidador.html` -> `registro_cuidador_inicial.html`)**: Al registrarse el paciente no se iniciaba su sesión automáticamente y `registro_cuidador_inicial.html` carecía de atributos `name`, método `POST` y campo `password`, descartando los datos ingresados.
+- [x] **Eliminación de código muerto**: `conexion.php`, `insertar_medicamento.php`, `registrar_usuario.php`, `controllers/guardar_cuidador_interno.php`, `template.html`, `registro_cuidador.html`.
+- [x] **Creación de `includes/`**: `auth.php`, `helpers.php`, `navbar.php`, `footer.php`.
+- [x] **Seguridad anti-IDOR y Modelos**: `Medicamento::perteneceAPaciente()`, `RecuperacionPassword`, `Notificacion`, `Reporte`.
+- [x] **Reorganización por carpetas**: Vistas movidas a `views/` y documentación centralizada en `docs/`.
 
 ---
 
-## 2. Checklist Estructurado de Refactorización
+## Parte II. Implementación Front-End MedHealth (`docs/medhealth-diseno.md`)
 
-### 2.1. Archivos a Eliminar, Crear o Reorganizar
+### 1. Diagnóstico de Brechas Visuales y Estructurales (Etapa 1 y Ajustes Goldfish Etapa 2)
+- **Sistema de diseño ausente**: Los archivos actuales en `CSS/*.css` utilizan `Arial`, tamaños entre `13px` y `16px` (inferiores al mínimo obligatorio de `18px` para adultos mayores), paleta antigua (`#00257A`, `#EEE5E5`) y botones menores a `56px`/`64px`. Para evitar colisiones de especificidad CSS, `CSS/style.css` debe limpiarse dejando únicamente `@import url('../assets/css/medhealth.css');` y retirarse las hojas heredadas `CSS/<vista>.css` de las vistas migradas.
+- **Navegación de paciente**: `includes/navbar.php` implementa una barra superior horizontal de 4 enlaces; `docs/medhealth-diseno.md` requiere una **barra lateral izquierda de 280px** (`--primario-600`) con logo **MedHealth**, 6 ítems de `64px` (`Hoy` [`hoy`], `Mis medicamentos` [`medicamentos`], `Historial` [`historial`], `Reporte PDF` [`reporte`], `Mi cuidador` [`cuidador`], `Mi perfil` [`perfil`]) y bloque inferior con nombre del usuario y cierre de sesión, eliminando la sub-barra duplicada `.profile-sidebar`.
+- **Layout público (W1–W7) y vistas `.html` estáticas**: W1–W7, P2 y P3 son archivos `.html` estáticos (no ejecutan PHP), por lo que requieren barra superior estática `.public-topbar` de `96px` con SVG inline y manejo de parámetros/errores mediante `URLSearchParams` y `.textContent` sobre contenedores `aria-live="polite"`. En P2 y P3 debe eliminarse el dashboard falso heredado detrás del overlay.
+- **Contraste WCAG y accesibilidad**:
+  - No alterar `html { font-size }` respecto al valor del navegador (`16px` base), usando `rem` (`1.125rem` = `18px` mínimo en contenido; `1rem` = `16px` en chips).
+  - Blanco sobre `--acento-500` (`#2A9D8F`) solo cumple contraste en texto grande en negritas (`>= 24px` / `1.5rem` bold `700`), por lo que `.btn-confirmar` debe mantener `font-size: 1.5rem; font-weight: 700` en todos los breakpoints, y chips/banners verdes deben usar `--acento-50` + `--acento-700`.
+  - Sustituir todas las entidades Unicode (`&#9200;`, `&#10004;`, `&#10006;`, `&#10005;`) por SVG lineales (`medhealthIcon()` o SVG inline).
+- **Controladores y modelos**:
+  - Eliminar `alert()` bloqueantes y `die()` en `login.php`, `registrar_paciente.php`, `registrar_cuidador.php`, `solicitar_recuperacion.php`, `procesar_baja_cuidador.php` y `procesar_cambio_password.php`, reemplazándolos por redirecciones con query params de error/éxito.
+  - Configurar `date_default_timezone_set('America/Mexico_City')` para coherencia de saludos y posposición de 5 minutos.
+  - Preservar nombres de campos POST existentes (`nombres`, `paterno`, `materno`, `telefono`, `email`, `password` en paciente; `nombre`, `paterno`, `materno`, `parentesco`, `telefono`, `email`, `password` + hidden `origen` en cuidador; `id_medicamento`, `nombre`, `dosis`, `via`, `hora_inicio`, `frecuencia_cant`, `frecuencia_unidad`, `duracion_cant`, `duracion_unidad`, `indicaciones` en medicamentos).
 
-- [x] **Eliminar archivos obsoletos / código muerto (verificados sin referencias activas)**:
-  - [x] Eliminar `conexion.php`
-  - [x] Eliminar `insertar_medicamento.php`
-  - [x] Eliminar `registrar_usuario.php`
-  - [x] Eliminar `controllers/guardar_cuidador_interno.php`
-  - [x] Eliminar `template.html` y `registro_cuidador.html`
-- [x] **Crear módulos auxiliares y componentes compartidos (`includes/`)**:
-  - [x] Crear `includes/auth.php`:
-    - `requireLogin(string $redirectUrl = 'login.html'): void` (recibe `'login.html'` desde raíz y `'../login.html'` desde `controllers/` para evitar errores 404).
-    - `obtenerPacienteActual(PDO $db): ?array` (retorna el arreglo asociativo del paciente autenticado o `null`).
-    - `obtenerIdPacienteActual(PDO $db): int` (retorna `id_paciente` o `0`).
-  - [x] Crear `includes/helpers.php`:
-    - `obtenerFechaActualEspanol(): string`
-    - `formatearFechaEspanol(?string $fecha): string`
-    - `convertirFrecuenciaAHoras(int $cantidad, string $unidad): int`
-    - `convertirDuracionADias(int $cantidad, string $unidad): int`
-    - `desglosarDuracionDias(int $dias): array` (retorna `['cantidad' => int, 'unidad' => string]`)
-  - [x] Crear `includes/navbar.php` y `includes/footer.php`:
-    - Parciales reutilizables con soporte para `$activePage` (`'inicio'`, `'medicamentos'`, `'historial'`, `'perfil'`).
+### 2. Checklist Estructurado de Implementación Front-End
 
-### 2.2. Métodos e Interfaces a Refactorizar
+#### 2.1. Hojas de Estilo y Activos Compartidos
+- [x] Crear `assets/css/medhealth.css` con tokens `:root`, `Atkinson Hyperlegible` en `rem` (sin modificar `html { font-size }`), botones `.btn` (`64px`, texto `1.5rem` bold, variantes `.btn-primario`, `.btn-secundario`, `.btn-confirmar`, `.btn-peligro`, `.btn-peligro-contorno`), campos `.campo` (`64px`, textarea `128px`, errores `--error-600`), chips `.chip`, tarjetas `.tarjeta` (`560`, `900`, `960`, `440`), tablas `.tabla`, barra lateral `.sidebar` (`280px`), `.public-topbar` (`96px`), modales `.modal-scrim` y responsividad (`1440px` a `1024px` y móvil).
+- [x] Limpiar `CSS/style.css` dejando únicamente `@import url('../assets/css/medhealth.css');` y retirar los `<link>` a hojas heredadas en todas las vistas.
 
-- [x] **Modelos (`models/`)**:
-  - [x] `models/Medicamento.php`:
-    - Sanitizar propiedades de texto en `crear()` y `actualizar()`.
-    - Añadir método `perteneceAPaciente(int $id_medicamento, int $id_paciente): bool` que verifique mediante `JOIN recetas r ON m.id_receta = r.id_receta WHERE m.id_medicamento = :id AND r.id_paciente = :id_paciente`.
-    - Soportar validación opcional de `$id_paciente` en `leerUno(?int $id_paciente = null)`, `actualizar(?int $id_paciente = null)` y `eliminar(?int $id_paciente = null)` para prevenir IDOR sin romper compatibilidad de firmas.
-  - [x] `models/Usuario.php` y `models/Reporte.php`:
-    - Limpiar código y comentarios obsoletos. Mantener `controllers/generar_pdf.php` enfocado en `HistorialToma` sin forzar inserciones inválidas en `Reporte::crear()` que violen llaves foráneas.
-- [x] **Controladores (`controllers/`)**:
-  - [x] Estandarizar `include_once __DIR__ . '/...'` en todos los controladores, incluyendo `controllers/login.php` y `controllers/generar_pdf.php`.
-  - [x] `controllers/registrar_paciente.php`: Iniciar sesión automáticamente tras crear el paciente (`$_SESSION['id_usuario']`, `$_SESSION['correo']`, `$_SESSION['rol']`) para que pueda registrar a su cuidador inmediatamente en el paso siguiente si elige "Sí".
-  - [x] `controllers/guardar_medicamento.php` y `controllers/actualizar_medicamento.php`: Usar `requireLogin('../login.html')`, `obtenerIdPacienteActual($db)`, `convertirFrecuenciaAHoras()` y `convertirDuracionADias()`, además de verificar pertenencia del medicamento al paciente al actualizar.
-  - [x] `controllers/eliminar_medicamento.php` y `controllers/registrar_toma.php`: Usar `requireLogin('../login.html')` y verificar `Medicamento::perteneceAPaciente()` antes de eliminar o registrar toma.
-  - [x] `controllers/registrar_cuidador.php`, `controllers/procesar_baja_cuidador.php`, `controllers/procesar_cambio_password.php`, `controllers/posponer_toma.php`, `controllers/generar_pdf.php`: Simplificar mediante `requireLogin('../login.html')` y `obtenerPacienteActual($db)`.
-- [x] **Vistas en Raíz (`/`)**:
-  - [x] Vistas con layout completo (`dashboard.php`, `medicamentos.php`, `agregar_medicamento.php`, `editar_medicamento.php`, `historial.php`, `perfil.php`, `perfil_cuidador.php`, `alta_cuidador.php`, `baja_cuidador.php`): Usar `requireLogin('login.html')`, `includes/navbar.php` e `includes/footer.php`.
-  - [x] Vistas de modal/superposición (`reporte.php`, `cambiar_contrasena.php`, `notificacion_no_tomada.php`): Usar `requireLogin('login.html')` conservando su estructura de modal específica (reparando el navbar de `reporte.php` y protegiendo `notificacion_no_tomada.php`).
-  - [x] En `editar_medicamento.php`: Validar que `leerUno($id_paciente)` retorne `true`; si no existe o no pertenece al paciente, redirigir a `medicamentos.php`.
-  - [x] En `perfil_cuidador.php`: Mostrar `$activo['correo']` real obtenido de la base de datos.
-  - [x] En `pregunta_cuidador.html`, `registro_cuidador_inicial.html`, `registro_paciente.html`, `notificacion_posponer.html`, `notificacion_tomada.html`: Corregir enlaces rotos (`../ADS/...` y `terminos.html`) y conectar adecuadamente el formulario de `registro_cuidador_inicial.html` con `controllers/registrar_cuidador.php`.
+#### 2.2. Parciales y Utilidades en `includes/`
+- [x] Crear `includes/icons.php` con `medhealthIcon(string $name, int $size = 24, string $class = ''): string` cubriendo los 17 iconos lineales de `medhealth-diseno.md` (`pill`, `home`, `clock`, `file-text`, `heart`, `user`, `plus`, `alert-triangle`, `check`, `x`, `chevron-left`, `chevron-right`, `chevron-down`, `search`, `phone`, `lock`, `mail`, más `log-out`).
+- [x] Actualizar `includes/auth.php`: incluir `icons.php`, `helpers.php`, y añadir `obtenerNombreUsuarioActual(?PDO $db = null): string` (abre `Database` si `$db === null` y no existe en `$_SESSION['nombre_usuario']`).
+- [x] Actualizar `includes/helpers.php`: fijar `date_default_timezone_set('America/Mexico_City')`, añadir `obtenerSaludoHora(): string` y `obtenerIniciales(string $nombreCompleto): string`.
+- [x] Actualizar `includes/navbar.php` y `includes/footer.php` (y crear `includes/layout_paciente.php` como alias compatible) para renderizar la barra lateral MedHealth de `280px` con `$activePage` (`hoy`, `medicamentos`, `historial`, `reporte`, `cuidador`, `perfil`) y el cierre de layout con script para cerrar modales con tecla `Escape`.
 
-### 2.3. Pruebas e Invariantes que Deben Conservarse
+#### 2.3. Modelos y Controladores
+- [x] `models/Cuidador.php`: Incluir `pc.fecha_inicio` en `obtenerActivo($id_paciente)`.
+- [x] `models/HistorialToma.php`:
+  - `obtenerTomasHoyPorPaciente(int $id_paciente): array` (`array<int, string>` mapeando `id_medicamento => estado_hoy` para `DATE(h.fecha_hora) = date('Y-m-d')`).
+  - `contarDiasTomadosPorPaciente(int $id_paciente): array` (`array<int, int>` con `COUNT(DISTINCT DATE(h.fecha_hora))` donde `estado = 'tomado'`).
+- [x] `controllers/login.php`: Reemplazar `die()` y `alert()` por redirección a `../views/login.html?error=credenciales` o `?error=no_registrado`; guardar `$_SESSION['nombre_usuario']` consultando `obtenerPacienteActual($db)`.
+- [x] `controllers/registrar_paciente.php`: Redirigir correo duplicado a `../views/registro_paciente.html?error=correo_duplicado`, errores de BD a `?error=registro`, guardar `$_SESSION['nombre_usuario']`, y redirigir a `../views/pregunta_cuidador.html?nombre=` . `urlencode($nombrePlano)`.
+- [x] `controllers/registrar_cuidador.php`: Leer `$_POST['origen'] ?? 'alta'` (`inicial` -> `views/registro_cuidador_inicial.html` en error / `views/dashboard.php` en éxito; `alta` -> `views/alta_cuidador.php` en error / `views/perfil_cuidador.php?exito=1` en éxito), eliminando `alert()` y `window.history.back()`.
+- [x] `controllers/solicitar_recuperacion.php`: Eliminar `alert()` y redirigir a `../views/login.html?recuperacion=enviada`.
+- [x] `controllers/procesar_baja_cuidador.php`: Eliminar `alert()` y redirigir a `../views/perfil_cuidador.php?exito=baja` (o `?error=baja`).
+- [x] `controllers/registrar_toma.php`: Validar `status` (`'tomado'` o `'no_tomado'`), permitir motivo opcional (`trim($_POST['motivo'] ?? '') === '' ? null : trim($_POST['motivo'])`), obtener nombre real vía `Medicamento::leerUno($id_paciente)`, y en `'tomado'` redirigir a `../views/notificacion_tomada.html?nombre=...&medicamento=...&hora=...`.
+- [x] `controllers/posponer_toma.php`: Redirigir a `../views/notificacion_posponer.html?hora=` . `urlencode(date('H:i', time() + 300))`.
+- [x] `controllers/procesar_cambio_password.php`: Validar `confirm_password`, eliminar `alert()`, redirigir errores a `../views/cambiar_contrasena.php?error=no_coincide` / `actual_incorrecta` / `error_actualizar`, y éxito a `../views/perfil.php?exito=password`.
+- [x] `controllers/generar_pdf.php`: Actualizar encabezado a `'MedHealth Reporte de Adherencia'` y descarga como `'Reporte_MedHealth.pdf'`.
 
-- [x] **Invariante 1 (Rutas Públicas)**: Todas las URLs activas de vistas y controladores se mantienen intactas.
-- [x] **Invariante 2 (Esquema de Base de Datos)**: Ninguna tabla ni columna de `seguimiento_medicamentos` es alterada.
-- [x] **Invariante 3 (Variables de Sesión)**: Se preservan `$_SESSION['id_usuario']`, `$_SESSION['correo']` y `$_SESSION['rol']`.
-- [x] **Invariante 4 (Estilos y Recursos)**: `CSS/`, `Recursos/` y `libs/fpdf/` permanecen intactos.
-- [x] **Invariante 5 (Validación de Sintaxis PHP)**: Todos los archivos `.php` deben aprobar `php -l` sin errores.
+#### 2.4. Pantallas Públicas (W1–W7, HTML estático con SVG inline y `URLSearchParams`)
+- [x] W1 `index.html`: Título display `"Tus medicamentos, siempre a tiempo."`, botones `"Iniciar sesión"` y `"Crear mi cuenta"`, tarjeta de 3 beneficios.
+- [x] W2 `views/registro_paciente.html`: Tarjeta `900px` en 2 columnas con `nombres`, `paterno`, `materno`, `telefono`, `email`, `password`, checkbox `acepto_terminos`, error inline con `URLSearchParams`.
+- [x] W3 `views/login.html`: Tarjeta `560px`, avisos inline (`error`, `recuperacion=enviada`), enlace recuperación y botón secundario crear cuenta.
+- [x] W4 `views/olvide_contrasena.html`: Tarjeta `560px`, enlace volver, aviso 60 minutos con icono `clock`.
+- [x] W5 `views/pregunta_cuidador.html`: Círculo verde con `check`, `"¡Tu cuenta está lista, {nombre}!"` con fallback limpio, dos tarjetas de `440px`.
+- [x] W6 `views/registro_cuidador_inicial.html`: Tarjeta `900px` en 2 columnas, `<select name="parentesco">`, hidden `origen=inicial`, nota contraseña, enlace omitir, errores inline.
+- [x] W7 `views/terminos.html`: Tarjeta `960px` con 3 bloques `h2` (`--primario-700`) bajo marca MedHealth y botón `"Entendido"` con fallback a `../index.html`.
+
+#### 2.5. Pantallas del Paciente (P1–P15)
+- [x] P1 `views/dashboard.php` (`$activePage = 'hoy'`): Saludo, fecha en español, tarjetas con `hora_inicio` e icono `clock`, estado tomado (`--acento-50`, borde `--acento-500`, chip `"Tomado"` sin botones), 3 botones en pendientes (`Se tomó`, `Posponer 5 min`, `No se tomó`), estado vacío a `agregar_medicamento.php`.
+- [x] P2 `views/notificacion_tomada.html`: Tarjeta centrada sobre `--secundario-50` con `.public-topbar`, halo `--acento-50`, círculo `116px` `--acento-500` con `check`, datos por `URLSearchParams` (`aria-live="polite"`), botón `"Volver a mi panel"`.
+- [x] P3 `views/notificacion_posponer.html`: Tarjeta centrada sobre `--secundario-50` con `.public-topbar`, icono `clock` en tonos `--alerta-50` / `--alerta-700`, nueva hora (`URLSearchParams`), botón `"Volver a mi panel"`.
+- [x] P4 `views/notificacion_no_tomada.php` (`$activePage = 'hoy'`): Modal `.modal-scrim` + `.modal-tarjeta` sobre el panel con nombre del medicamento y textarea `"Motivo (opcional)"` sin `required`.
+- [x] P5 `views/medicamentos.php` y P8 (`$activePage = 'medicamentos'`): Grid 2 columnas, barra progreso `"Día X de N"` acotada (`min` y división segura), botones Editar y Eliminar con modal P8 accesible (`Escape` / Cancelar).
+- [x] P6 `views/agregar_medicamento.php` (`$activePage = 'medicamentos'`): Formulario 2 columnas, `<select name="via">`, textarea `indicaciones`, `<label for>` en todos los campos.
+- [x] P7 `views/editar_medicamento.php` (`$activePage = 'medicamentos'`): Precargado con `desglosarDuracionDias()`, `<select name="via">` preservando cualquier valor legado como `<option selected>`.
+- [x] P9 `views/historial.php` (`$activePage = 'historial'`): Tabla `.tabla` con chips icono + texto y estado vacío.
+- [x] P10 `views/reporte.php` (`$activePage = 'reporte'`): Dos columnas (explicación + descarga PDF a la izquierda; hoja blanca de vista previa real con datos del paciente e historial a la derecha).
+- [x] P11 `views/perfil.php` (`$activePage = 'perfil'`): Campos con `<label for>` readonly, banner `aria-live="polite"` para `?exito=password`, botones `"Cambiar contraseña"` y `"Cerrar sesión"`.
+- [x] P12 `views/cambiar_contrasena.php` (`$activePage = 'perfil'`): Dentro del layout lateral, tarjeta `560px` con `current_password`, `new_password`, `confirm_password`, errores inline.
+- [x] P13 `views/perfil_cuidador.php` (`$activePage = 'cuidador'`): Avatar de iniciales, `"Desde {fecha}"`, banners de éxito/baja, estado vacío cuando no hay cuidador activo, y tabla historial debajo.
+- [x] P14 `views/alta_cuidador.php` (`$activePage = 'cuidador'`): Formulario 2 columnas, hidden `origen=alta`, aviso `--alerta-50`, error inline.
+- [x] P15 `views/baja_cuidador.php` (`$activePage = 'cuidador'`): Modal sobre la vista de cuidador con nombre real del cuidador activo (`"¿Dar de baja a {nombre}?"`) y botones confirmar/cancelar.
+
+### 3. Invariantes a Conservar
+- [x] **Invariante 1**: Ninguna modificación al esquema de base de datos ni lectura/escritura de `.env`.
+- [x] **Invariante 2**: Cero emojis en todo el código y documentación (solo iconos SVG lineales).
+- [x] **Invariante 3**: Todos los archivos `.php` aprueban `php -l` sin errores de sintaxis.
+- [x] **Invariante 4**: Todos los criterios visuales y de accesibilidad de `docs/medhealth-diseno.md` Sección 7 (`Atkinson Hyperlegible`, texto >= `18px` / `16px` chips, controles >= `56px`, contraste WCAG `--acento-500`, `lang="es"`, `<label for>`, `aria-live="polite"`).

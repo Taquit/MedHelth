@@ -2,6 +2,7 @@
 include_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../libs/fpdf/fpdf.php';
 include_once __DIR__ . '/../models/HistorialToma.php';
+include_once __DIR__ . '/../models/Medicamento.php';
 include_once __DIR__ . '/../models/Reporte.php';
 
 requireLogin('../views/login.html');
@@ -14,10 +15,19 @@ $nombre_paciente = $row_pac ? $row_pac['nombre'] . " " . $row_pac['apellido_pate
 $id_paciente = $row_pac ? (int) $row_pac['id_paciente'] : 0;
 
 if ($id_paciente > 0) {
+    $idMedicamentoReporte = null;
+    if (isset($_GET['id_medicamento'])) {
+        $candidatoId = (int) $_GET['id_medicamento'];
+        $medicamentoModel = new Medicamento($db);
+        if ($medicamentoModel->perteneceAPaciente($candidatoId, $id_paciente)) {
+            $idMedicamentoReporte = $candidatoId;
+        }
+    }
+
     try {
         $reporteModel = new Reporte($db);
         $reporteModel->id_paciente = $id_paciente;
-        $reporteModel->id_medicamento = isset($_GET['id_medicamento']) ? (int) $_GET['id_medicamento'] : null;
+        $reporteModel->id_medicamento = $idMedicamentoReporte;
         $reporteModel->generado_por = $_SESSION['rol'] ?? 'paciente';
         $reporteModel->crear();
     } catch (PDOException $e) {
@@ -28,12 +38,22 @@ if ($id_paciente > 0) {
 $historialModel = new HistorialToma($db);
 $stmt_hist = $historialModel->leerPorPaciente($id_paciente);
 
+function medhealthPdfText(string $str): string {
+    if (function_exists('mb_convert_encoding')) {
+        return mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8');
+    }
+    if (function_exists('iconv')) {
+        return iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $str);
+    }
+    return @utf8_decode($str);
+}
+
 class PDF extends FPDF {
     function Header() {
         $this->SetFont('Arial', 'B', 15);
-        $this->SetTextColor(0, 37, 122);
+        $this->SetTextColor(0, 119, 182);
         $this->Cell(80);
-        $this->Cell(30, 10, 'Cuidate+ Reporte de Adherencia', 0, 0, 'C');
+        $this->Cell(30, 10, 'MedHealth Reporte de Adherencia', 0, 0, 'C');
         $this->Ln(20);
     }
 
@@ -52,12 +72,12 @@ $pdf->SetFont('Arial', '', 12);
 
 $pdf->SetFont('Arial', 'B', 12);
 $pdf->SetTextColor(0, 0, 0);
-$pdf->Cell(0, 10, utf8_decode('Paciente: ' . $nombre_paciente), 0, 1);
+$pdf->Cell(0, 10, medhealthPdfText('Paciente: ' . $nombre_paciente), 0, 1);
 $pdf->SetFont('Arial', '', 10);
 $pdf->Cell(0, 10, 'Fecha de reporte: ' . date('d/m/Y'), 0, 1);
 $pdf->Ln(5);
 
-$pdf->SetFillColor(0, 37, 122);
+$pdf->SetFillColor(0, 119, 182);
 $pdf->SetTextColor(255);
 $pdf->SetFont('Arial', 'B', 10);
 
@@ -82,25 +102,25 @@ if ($stmt_hist->rowCount() > 0) {
         $estado = ucfirst($row['estado']);
         $obs = $row['observaciones'];
 
-        $pdf->Cell($w[0], 6, utf8_decode($row['nombre_medicamento']), 1);
+        $pdf->Cell($w[0], 6, medhealthPdfText((string) $row['nombre_medicamento']), 1);
         $pdf->Cell($w[1], 6, $fecha, 1, 0, 'C');
         $pdf->Cell($w[2], 6, $hora, 1, 0, 'C');
 
         if ($row['estado'] === 'tomado') {
-            $pdf->SetTextColor(40, 167, 69);
+            $pdf->SetTextColor(27, 111, 101);
         } else {
-            $pdf->SetTextColor(220, 53, 69);
+            $pdf->SetTextColor(192, 57, 43);
         }
 
-        $pdf->Cell($w[3], 6, utf8_decode($estado), 1, 0, 'C');
+        $pdf->Cell($w[3], 6, medhealthPdfText((string) $estado), 1, 0, 'C');
 
         $pdf->SetTextColor(0);
-        $pdf->Cell($w[4], 6, utf8_decode($obs), 1);
+        $pdf->Cell($w[4], 6, medhealthPdfText((string) $obs), 1);
         $pdf->Ln();
     }
 } else {
     $pdf->Cell(array_sum($w), 10, 'No hay registros disponibles.', 1, 0, 'C');
 }
 
-$pdf->Output('D', 'Reporte_CuidatePlus.pdf');
+$pdf->Output('D', 'Reporte_MedHealth.pdf');
 ?>

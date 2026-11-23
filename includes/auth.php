@@ -5,6 +5,8 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include_once __DIR__ . '/../config/Database.php';
 include_once __DIR__ . '/../models/Paciente.php';
+include_once __DIR__ . '/helpers.php';
+include_once __DIR__ . '/icons.php';
 
 /**
  * Verifica que exista una sesion activa de usuario.
@@ -50,5 +52,33 @@ function obtenerPacienteActual(PDO $db): ?array {
 function obtenerIdPacienteActual(PDO $db): int {
     $row = obtenerPacienteActual($db);
     return $row ? (int) $row['id_paciente'] : 0;
+}
+
+/**
+ * Obtiene el nombre para mostrar del usuario autenticado en la barra lateral y mensajes.
+ *
+ * @param PDO|null $db Conexion PDO opcional. Si es null y no esta en sesion, se conecta automaticamente.
+ * @return string
+ */
+function obtenerNombreUsuarioActual(?PDO $db = null): string {
+    if (!empty($_SESSION['nombre_usuario'])) {
+        return (string) $_SESSION['nombre_usuario'];
+    }
+    if ($db === null && isset($_SESSION['id_usuario'])) {
+        $database = new Database();
+        $db = $database->getConnection();
+    }
+    if ($db !== null) {
+        $row = obtenerPacienteActual($db);
+        if ($row && !empty($row['nombre'])) {
+            $nombreCompleto = htmlspecialchars_decode(
+                trim($row['nombre'] . ' ' . ($row['apellido_paterno'] ?? '')),
+                ENT_QUOTES
+            );
+            $_SESSION['nombre_usuario'] = $nombreCompleto;
+            return $nombreCompleto;
+        }
+    }
+    return !empty($_SESSION['correo']) ? (string) $_SESSION['correo'] : 'Usuario';
 }
 ?>

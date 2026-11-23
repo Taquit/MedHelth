@@ -3,65 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmación - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/dashboard.css">
-    <link rel="stylesheet" href="../CSS/notificaciones.css">
+    <title>Toma confirmada - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
+    <div class="public-shell">
+        <header class="public-topbar">
+            <a href="dashboard.php" class="brand-link">
+                <span class="brand-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
+                <span>MedHealth</span>
+            </a>
+            <a href="dashboard.php" class="topbar-link">Ir a mi panel</a>
+        </header>
 
-    <div class="background-content">
-        <nav class="navbar">
-            <div class="logo">
-                <img src="../Recursos/logo.png" alt="Logo Cuidate+">
-                Cuidate+
-            </div>
-            <div class="nav-links">
-                <a href="dashboard.php" class="nav-item active">INICIO</a>
-                <a href="medicamentos.php" class="nav-item">MEDICAMENTOS</a>
-                <a href="historial.php" class="nav-item">HISTORIAL</a>
-            </div>
-            <div class="nav-right">
-                <a href="perfil.php" class="profile-link">
-                    <span class="profile-text">PERFIL</span>
-                    <div class="profile-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    </div>
-                </a>
-            </div>
-        </nav>
+        <main class="public-main">
+            <section class="tarjeta tarjeta-form tarjeta-560" style="text-align: center;" aria-live="polite">
+                <div class="icon-halo-exito">
+                    <span class="icon-circle-116">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                </div>
 
-        <main class="dashboard-container">
-            <header class="dashboard-header">
-                <h1>¡ Hola !</h1>
-                <p class="date-display">Hoy es XX de Octubre del 2025</p>
-                <h2>Medicamentos del día de hoy</h2>
-            </header>
-            <section class="medication-list">
-                <article class="med-card">
-                    <div class="med-info">
-                        <div class="med-title-row"><h3>Nombre del Medicamento</h3></div>
-                        <div class="med-details-grid"><p><strong>Dosis:</strong> 1/2 tableta</p></div>
-                    </div>
-                    <aside class="med-actions"><h4>Confirmación</h4></aside>
-                </article>
+                <h1 id="titulo-toma">¡Muy bien!</h1>
+                <p id="detalle-toma" class="cuerpo-grande text-muted" style="margin-top: 12px; margin-bottom: 32px;">
+                    Registraste tu medicamento correctamente.
+                </p>
+
+                <a href="dashboard.php" class="btn btn-primario btn-block">Volver a mi panel</a>
             </section>
         </main>
     </div>
 
-    <div class="notification-overlay">
-        <div class="notification-card">
-            <div class="icon-container success-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-            </div>
+    <script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var nombre = (params.get('nombre') || '').trim();
+        var medicamento = (params.get('medicamento') || '').trim();
+        var hora = (params.get('hora') || '').trim();
 
-            <h3>Medicina tomada</h3>
+        var titulo = document.getElementById('titulo-toma');
+        var detalle = document.getElementById('detalle-toma');
 
-            <a href="dashboard.php" class="btn-exit">Salir</a>
-        </div>
-    </div>
+        if (nombre !== '') {
+            titulo.textContent = '¡Muy bien, ' + nombre + '!';
+        }
 
+        if (medicamento !== '' && hora !== '') {
+            detalle.textContent = 'Registraste ' + medicamento + ' a las ' + hora + '.';
+        } else if (medicamento !== '') {
+            detalle.textContent = 'Registraste ' + medicamento + ' correctamente.';
+        }
+    })();
+    </script>
 </body>
 </html>

@@ -1,0 +1,60 @@
+{
+  "descripcion": "Simulacion del panel de control de cuidador con supervision multiple de pacientes",
+  "cuidador": {
+    "id_cuidador": 3,
+    "id_usuario": 6,
+    "nombre_completo": "Jorge Mendoza Ramos",
+    "parentesco": "Enfermero particular",
+    "correo": "jorge.mendoza@example.com",
+    "telefono": "5566778899"
+  },
+  "pacientes_asignados": [
+    {
+      "id_paciente": 1,
+      "nombre_completo": "Maria Gonzalez Perez",
+      "telefono": "5512345678",
+      "estado_salud": "Estable",
+      "semaforo": "verde",
+      "adherencia_semanal_porcentaje": 95,
+      "total_medicamentos_activos": 3,
+      "proxima_toma": {
+        "horario": "13:00",
+        "medicamento": "Metformina 850 mg"
+      },
+      "alertas_activas_urgentes": 0,
+      "resumen_tomas_hoy": {
+        "programadas": 4,
+        "tomadas": 1,
+        "pendientes": 3,
+        "omitidas": 0
+      }
+    },
+    {
+      "id_paciente": 2,
+      "nombre_completo": "Carlos Ruiz Morales",
+      "telefono": "5587654321",
+      "estado_salud": "En observacion",
+      "semaforo": "rojo",
+      "adherencia_semanal_porcentaje": 60,
+      "total_medicamentos_activos": 2,
+      "proxima_toma": {
+        "horario": "07:00",
+        "medicamento": "Paracetamol 500 mg"
+      },
+      "alertas_activas_urgentes": 1,
+      "detalle_alerta_urgente": {
+        "id_notificacion": 9,
+        "medicamento": "Tramadol 50 mg",
+        "motivo": "Dosis vencida no reportada por el paciente (notificar_cuidador = 1)",
+        "accion_recomendada": "Llamar de inmediato al paciente al 5587654321"
+      },
+      "resumen_tomas_hoy": {
+        "programadas": 3,
+        "tomadas": 0,
+        "pendientes": 2,
+        "pospuestas": 1,
+        "omitidas": 1
+      }
+    }
+  ]
+}

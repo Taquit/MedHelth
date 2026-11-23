@@ -75,22 +75,24 @@ class Notificacion {
         $stmtSelect->execute();
         $row = $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
+        $nuevaFecha = date('Y-m-d H:i:s', time() + ($minutos * 60));
+
         if ($row) {
             $queryUpdate = "UPDATE " . $this->table_name . "
-                            SET fecha_hora_programada = DATE_ADD(NOW(), INTERVAL :minutos MINUTE),
+                            SET fecha_hora_programada = :fecha_prog,
                                 pospuesta_veces = pospuesta_veces + 1,
                                 estado_alerta = 'pospuesta'
                             WHERE id_notificacion = :id_notif";
 
             $stmtUpdate = $this->conn->prepare($queryUpdate);
-            $stmtUpdate->bindParam(":minutos", $minutos, PDO::PARAM_INT);
+            $stmtUpdate->bindParam(":fecha_prog", $nuevaFecha);
             $stmtUpdate->bindParam(":id_notif", $row['id_notificacion'], PDO::PARAM_INT);
             return $stmtUpdate->execute();
         }
 
         $this->id_medicamento = $id_medicamento;
         $this->id_toma = null;
-        $this->fecha_hora_programada = date('Y-m-d H:i:s', time() + ($minutos * 60));
+        $this->fecha_hora_programada = $nuevaFecha;
         $this->pospuesta_veces = 1;
         $this->estado_alerta = 'pospuesta';
         $this->notificar_cuidador = 0;

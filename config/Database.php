@@ -1,11 +1,18 @@
 <?php
 class Database {
-    // Cambia estos datos por los de tu servidor local (XAMPP/WAMP)
-    private $host = "localhost";
-    private $db_name = "seguimiento_medicamentos";
-    private $username = "root";
-    private $password = ""; // En XAMPP suele ser vacío, en MAMP es "root"
+    // Cambia estos datos por los de tu servidor local (XAMPP/WAMP) o define variables de entorno
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     public $conn;
+
+    public function __construct() {
+        $this->host = getenv('DB_HOST') ?: "localhost";
+        $this->db_name = getenv('DB_NAME') ?: "seguimiento_medicamentos";
+        $this->username = getenv('DB_USER') ?: "root";
+        $this->password = getenv('DB_PASS') !== false ? getenv('DB_PASS') : "";
+    }
 
     // Método para obtener la conexión
     public function getConnection() {

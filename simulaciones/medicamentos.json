@@ -1,0 +1,68 @@
+[
+  {
+    "id_medicamento": 1,
+    "id_receta": 1,
+    "nombre": "Losartan",
+    "dosis": "50 mg",
+    "frecuencia_horas": 12,
+    "duracion_dias": 90,
+    "hora_inicio": "08:00:00",
+    "via_administracion": "Oral",
+    "indicaciones": "Tomar una tableta cada 12 horas con medio vaso de agua, dosis matutina en ayunas."
+  },
+  {
+    "id_medicamento": 2,
+    "id_receta": 1,
+    "nombre": "Metformina",
+    "dosis": "850 mg",
+    "frecuencia_horas": 24,
+    "duracion_dias": 90,
+    "hora_inicio": "13:00:00",
+    "via_administracion": "Oral",
+    "indicaciones": "Tomar una tableta al dia inmediatamente despues de la comida principal."
+  },
+  {
+    "id_medicamento": 3,
+    "id_receta": 2,
+    "nombre": "Atorvastatina",
+    "dosis": "20 mg",
+    "frecuencia_horas": 24,
+    "duracion_dias": 60,
+    "hora_inicio": "21:00:00",
+    "via_administracion": "Oral",
+    "indicaciones": "Tomar una tableta por la noche antes de dormir."
+  },
+  {
+    "id_medicamento": 4,
+    "id_receta": 3,
+    "nombre": "Paracetamol",
+    "dosis": "500 mg",
+    "frecuencia_horas": 8,
+    "duracion_dias": 14,
+    "hora_inicio": "07:00:00",
+    "via_administracion": "Oral",
+    "indicaciones": "Tomar una tableta cada 8 horas si presenta dolor leve a moderado."
+  },
+  {
+    "id_medicamento": 5,
+    "id_receta": 3,
+    "nombre": "Tramadol",
+    "dosis": "50 mg",
+    "frecuencia_horas": 12,
+    "duracion_dias": 7,
+    "hora_inicio": "09:00:00",
+    "via_administracion": "Oral",
+    "indicaciones": "Tomar una capsula cada 12 horas solo si el dolor agudo no cede con paracetamol."
+  },
+  {
+    "id_medicamento": 6,
+    "id_receta": 4,
+    "nombre": "Metotrexato",
+    "dosis": "2.5 mg",
+    "frecuencia_horas": 168,
+    "duracion_dias": 180,
+    "hora_inicio": "08:00:00",
+    "via_administracion": "Oral",
+    "indicaciones": "Dosis semanal fija cada lunes por la manana con el desayuno."
+  }
+]

@@ -1,0 +1,29 @@
+[
+  {
+    "id_cuidador": 1,
+    "id_usuario": 3,
+    "nombre": "Laura",
+    "apellido_paterno": "Hernandez",
+    "apellido_materno": "Gonzalez",
+    "parentesco": "Hija",
+    "telefono": "5599887766"
+  },
+  {
+    "id_cuidador": 2,
+    "id_usuario": 4,
+    "nombre": "Roberto",
+    "apellido_paterno": "Sanchez",
+    "apellido_materno": "Morales",
+    "parentesco": "Hijo",
+    "telefono": "5544332211"
+  },
+  {
+    "id_cuidador": 3,
+    "id_usuario": 6,
+    "nombre": "Jorge",
+    "apellido_paterno": "Mendoza",
+    "apellido_materno": "Ramos",
+    "parentesco": "Enfermero particular",
+    "telefono": "5566778899"
+  }
+]

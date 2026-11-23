@@ -3,59 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Cuidador - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/registro_cuidador_inicial.css">
+    <title>Registrar cuidador - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
+    <div class="public-shell">
+        <header class="public-topbar">
+            <a href="../index.html" class="brand-link">
+                <span class="brand-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
+                <span>MedHealth</span>
+            </a>
+            <a href="terminos.html" class="topbar-link">Términos y privacidad</a>
+        </header>
 
-    <main class="register-container">
-        <div class="register-card">
-            <div class="register-header">
-                <h2>Registro del cuidador</h2>
-                <p class="subtitle">* Datos de contacto y acceso del cuidador</p>
-            </div>
-
-            <form action="../controllers/registrar_cuidador.php" method="POST">
-                <div class="form-group">
-                    <label for="nombre">Nombre(s)</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Ingresa nombre del cuidador" required>
+        <main class="public-main">
+            <section class="tarjeta tarjeta-form tarjeta-900">
+                <div style="margin-bottom: 28px;">
+                    <h1>Registrar a mi cuidador</h1>
+                    <p class="cuerpo text-muted" style="margin-top: 8px;">Ingresa los datos de tu cuidador de confianza y crea su contraseña de acceso.</p>
                 </div>
 
-                <div class="form-group">
-                    <label for="paterno">Apellido Paterno</label>
-                    <input type="text" id="paterno" name="paterno" placeholder="Ingresa apellido paterno" required>
+                <div id="cuidador-alert" class="aviso aviso-error" role="alert" aria-live="polite" style="margin-bottom: 24px;" hidden>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+                    <span id="cuidador-alert-text"></span>
                 </div>
 
-                <div class="form-group">
-                    <label for="materno">Apellido Materno</label>
-                    <input type="text" id="materno" name="materno" placeholder="Ingresa apellido materno">
-                </div>
+                <form action="../controllers/registrar_cuidador.php" method="POST" class="form-stack">
+                    <input type="hidden" name="origen" value="inicial">
 
-                <div class="form-group">
-                    <label for="parentesco">Relación con el paciente</label>
-                    <input type="text" id="parentesco" name="parentesco" placeholder="Ej. Hijo, Enfermera, Nieto" required>
-                </div>
+                    <div class="form-grid-2">
+                        <div class="campo">
+                            <label for="nombre">Nombre(s)</label>
+                            <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Carlos" required>
+                        </div>
 
-                <div class="form-group">
-                    <label for="telefono">Teléfono de contacto</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="Ingresa número telefónico" required>
-                </div>
+                        <div class="campo">
+                            <label for="paterno">Apellido paterno</label>
+                            <input type="text" id="paterno" name="paterno" placeholder="Ej. Pérez" required>
+                        </div>
 
-                <div class="form-group">
-                    <label for="email">Correo Electrónico</label>
-                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
-                </div>
+                        <div class="campo">
+                            <label for="materno">Apellido materno</label>
+                            <input type="text" id="materno" name="materno" placeholder="Ej. López">
+                        </div>
 
-                <div class="form-group">
-                    <label for="password">Contraseña Temporal</label>
-                    <input type="password" id="password" name="password" placeholder="Crea una contraseña" required>
-                </div>
+                        <div class="campo">
+                            <label for="parentesco">Parentesco</label>
+                            <div class="select-wrapper">
+                                <select id="parentesco" name="parentesco" required>
+                                    <option value="">Selecciona una opción</option>
+                                    <option value="Familiar">Familiar</option>
+                                    <option value="Enfermero/a">Enfermero/a</option>
+                                    <option value="Amigo/a">Amigo/a</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                                <span class="select-chevron">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                                </span>
+                            </div>
+                        </div>
 
-                <button type="submit" class="btn-finalizar">Finalizar registro</button>
-            </form>
-        </div>
-    </main>
+                        <div class="campo">
+                            <label for="telefono">Teléfono</label>
+                            <input type="tel" id="telefono" name="telefono" placeholder="Ej. 55 1234 5678" required>
+                        </div>
 
+                        <div class="campo" id="campo-email">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" id="email" name="email" placeholder="cuidador@correo.com" required>
+                            <span id="email-error" class="mensaje-error" aria-live="polite"></span>
+                        </div>
+
+                        <div class="campo col-span-2">
+                            <label for="password">Contraseña para su cuenta</label>
+                            <input type="password" id="password" name="password" placeholder="Crea una contraseña temporal" required>
+                            <span class="campo-ayuda">Compártela con tu cuidador para que pueda entrar.</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions-row">
+                        <button type="submit" class="btn btn-primario">Guardar cuidador</button>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 8px;">
+                        <a href="dashboard.php" class="cuerpo-bold">Omitir por ahora</a>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var error = params.get('error');
+        if (!error) return;
+
+        var alertBox = document.getElementById('cuidador-alert');
+        var alertText = document.getElementById('cuidador-alert-text');
+
+        if (error === 'correo_duplicado') {
+            var msg = 'El correo ingresado para el cuidador ya está registrado.';
+            alertText.textContent = msg;
+            alertBox.hidden = false;
+            document.getElementById('email-error').textContent = msg;
+            document.getElementById('campo-email').classList.add('campo-error');
+            document.getElementById('email').setAttribute('aria-invalid', 'true');
+        } else {
+            alertText.textContent = 'No se pudo guardar el cuidador. Verifica los datos e inténtalo de nuevo.';
+            alertBox.hidden = false;
+        }
+    })();
+    </script>
 </body>
 </html>

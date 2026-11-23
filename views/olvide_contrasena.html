@@ -3,29 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar Contraseña - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/olvide_contrasena.css">
+    <title>Recuperar contraseña - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
+    <div class="public-shell">
+        <header class="public-topbar">
+            <a href="../index.html" class="brand-link">
+                <span class="brand-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
+                <span>MedHealth</span>
+            </a>
+            <a href="terminos.html" class="topbar-link">Términos y privacidad</a>
+        </header>
 
-    <main class="forgot-container">
-        <div class="forgot-card">
-            <h2 class="forgot-title">Olvide mi contraseña</h2>
-
-            <form action="../controllers/solicitar_recuperacion.php" method="POST">
-                <div class="form-group">
-                    <label for="email">Escribe tu correo</label>
-                    <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+        <main class="public-main">
+            <section class="tarjeta tarjeta-form tarjeta-560">
+                <div style="margin-bottom: 20px;">
+                    <a href="login.html" class="cuerpo-bold" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                        <span>Volver a iniciar sesión</span>
+                    </a>
                 </div>
 
-                <p class="helper-text">- Se te enviara un correo con tu contraseña</p>
+                <h1 style="margin-bottom: 12px;">Recuperar contraseña</h1>
+                <p class="cuerpo text-muted" style="margin-bottom: 24px;">
+                    Escribe el correo con el que creaste tu cuenta y te enviaremos un enlace de recuperación.
+                </p>
 
-                <button type="submit" class="btn-enviar">Enviar</button>
-                <a href="login.html" class="btn-cancel">Cancelar / Volver</a>
-            </form>
-        </div>
-    </main>
+                <form action="../controllers/solicitar_recuperacion.php" method="POST" class="form-stack">
+                    <div class="campo">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+                    </div>
 
+                    <div class="aviso aviso-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span>El enlace funciona durante 60 minutos y solo una vez.</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primario btn-block">Enviar enlace</button>
+                </form>
+            </section>
+        </main>
+    </div>
 </body>
 </html>

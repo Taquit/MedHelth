@@ -3,53 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Términos y Condiciones - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/terminos.css">
+    <title>Términos y privacidad - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
+    <div class="public-shell">
+        <header class="public-topbar">
+            <a href="../index.html" class="brand-link">
+                <span class="brand-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
+                <span>MedHealth</span>
+            </a>
+            <a href="login.html" class="topbar-link">Iniciar sesión</a>
+        </header>
 
-    <main class="terms-container">
-        <div class="terms-card">
-            <div class="terms-header">
-                <div class="logo justify-center">
-                    <img src="../Recursos/logo.png" alt="Logo Cuidate+">
-                    Cuidate+
+        <main class="public-main">
+            <article class="tarjeta tarjeta-form tarjeta-960">
+                <h1>Términos y aviso de privacidad</h1>
+                <p class="cuerpo text-muted" style="margin-top: 8px;">Última actualización: Octubre 2025</p>
+
+                <div class="terms-body">
+                    <section class="terms-section">
+                        <h2>Aviso médico</h2>
+                        <p class="cuerpo">
+                            MedHealth es una herramienta de organización y recordatorio de tomas. No sustituye el consejo médico profesional ni proporciona diagnósticos o prescripciones. Consulta siempre a tu médico ante cualquier duda sobre tu salud o tratamiento.
+                        </p>
+                    </section>
+
+                    <section class="terms-section">
+                        <h2>Privacidad de tus datos</h2>
+                        <p class="cuerpo">
+                            Tu información personal, historial de tomas y datos de tu cuidador se utilizan exclusivamente para brindarte seguimiento dentro de MedHealth. Tus datos no se comparten con terceros sin tu consentimiento explícito.
+                        </p>
+                    </section>
+
+                    <section class="terms-section">
+                        <h2>Tus responsabilidades</h2>
+                        <p class="cuerpo">
+                            Eres responsable de mantener la confidencialidad de tu contraseña y de verificar que los nombres de medicamentos, dosis, vías de administración y horarios ingresados coincidan con tu receta médica.
+                        </p>
+                    </section>
                 </div>
-                <h2>Términos y Condiciones</h2>
-                <p>Última actualización: Octubre 2025</p>
-            </div>
 
-            <div class="terms-content">
-                <h3>1. Aceptación de los Términos</h3>
-                <p>Al descargar, instalar o utilizar la aplicación "Cuidate+", usted acepta estar sujeto a estos términos y condiciones. Si no está de acuerdo con alguna parte de estos términos, no podrá utilizar nuestros servicios.</p>
+                <div>
+                    <button type="button" id="btn-entendido" class="btn btn-secundario">Entendido</button>
+                </div>
+            </article>
+        </main>
+    </div>
 
-                <h3>2. Descargo de Responsabilidad Médica</h3>
-                <p><strong>Importante:</strong> Cuidate+ es una herramienta de gestión y recordatorio. <strong>NO sustituye el consejo médico profesional.</strong> La aplicación no proporciona diagnósticos ni tratamientos. Siempre consulte a su médico ante cualquier duda sobre su salud o medicación.</p>
-
-                <h3>3. Privacidad de los Datos</h3>
-                <p>Nos comprometemos a proteger su información personal. Sus datos de salud se almacenan de forma local en su dispositivo y/o en servidores encriptados, y no serán compartidos con terceros sin su consentimiento explícito.</p>
-
-                <h3>4. Responsabilidades del Usuario</h3>
-                <p>Usted es responsable de mantener la confidencialidad de su contraseña y de la exactitud de la información ingresada (dosis, horarios, nombres de medicamentos).</p>
-
-                <h3>5. Modificaciones</h3>
-                <p>Nos reservamos el derecho de modificar estos términos en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la aplicación.</p>
-                
-                <p class="footer-note">Si tiene dudas, contáctenos en soporte@cuidateplus.com</p>
-            </div>
-
-            <div class="terms-actions">
-                <button onclick="history.back()" class="btn-back">
-                    ENTENDIDO, VOLVER
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <footer class="footer">
-        <p>Derechos de Salud+</p>
-    </footer>
-
+    <script>
+    document.getElementById('btn-entendido').addEventListener('click', function () {
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = '../index.html';
+        }
+    });
+    </script>
 </body>
 </html>

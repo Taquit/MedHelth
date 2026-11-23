@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set('America/Mexico_City');
+
 /**
  * Devuelve la lista de meses en espanol.
  *
@@ -39,6 +41,42 @@ function formatearFechaEspanol(?string $fecha): string {
     $meses = obtenerMesesEspanol();
     $mesIndex = (int) date('n', $ts) - 1;
     return date('d', $ts) . " de " . $meses[$mesIndex] . " " . date('Y', $ts);
+}
+
+/**
+ * Devuelve un saludo acorde a la hora del dia.
+ *
+ * @return string
+ */
+function obtenerSaludoHora(): string {
+    $hora = (int) date('G');
+    if ($hora < 12) {
+        return 'Buenos días';
+    }
+    if ($hora < 19) {
+        return 'Buenas tardes';
+    }
+    return 'Buenas noches';
+}
+
+/**
+ * Obtiene hasta dos iniciales en mayusculas a partir de un nombre completo.
+ *
+ * @param string $nombreCompleto
+ * @return string
+ */
+function obtenerIniciales(string $nombreCompleto): string {
+    $partes = preg_split('/\s+/', trim($nombreCompleto));
+    if (!$partes || $partes[0] === '') {
+        return 'C';
+    }
+    $iniciales = '';
+    foreach (array_slice($partes, 0, 2) as $parte) {
+        $iniciales .= function_exists('mb_substr')
+            ? mb_strtoupper(mb_substr($parte, 0, 1, 'UTF-8'), 'UTF-8')
+            : strtoupper(substr($parte, 0, 1));
+    }
+    return $iniciales;
 }
 
 /**

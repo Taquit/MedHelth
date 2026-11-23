@@ -1,7 +1,7 @@
 <?php
 include_once __DIR__ . '/../includes/auth.php';
-include_once __DIR__ . '/../includes/helpers.php';
 include_once __DIR__ . '/../models/Medicamento.php';
+include_once __DIR__ . '/../models/HistorialToma.php';
 
 requireLogin('login.html');
 
@@ -13,104 +13,168 @@ if ($row_paciente) {
     $id_paciente = (int) $row_paciente['id_paciente'];
     $nombre_mostrar = $row_paciente['nombre'];
 } else {
-    $nombre_mostrar = "Usuario";
     $id_paciente = 0;
+    $nombre_mostrar = 'Usuario';
 }
 
 $medicamentoModel = new Medicamento($db);
 $stmt_meds = $medicamentoModel->leerPorPaciente($id_paciente);
-$num_meds = $stmt_meds->rowCount();
+$medicamentos = $stmt_meds->fetchAll(PDO::FETCH_ASSOC);
+$num_meds = count($medicamentos);
 
+$historialModel = new HistorialToma($db);
+$tomasHoy = ($id_paciente > 0) ? $historialModel->obtenerTomasHoyPorPaciente($id_paciente) : [];
+
+$confirmadasHoy = 0;
+$pendientesHoy = 0;
+foreach ($medicamentos as $medItem) {
+    $estadoItem = $tomasHoy[(int) $medItem['id_medicamento']] ?? null;
+    if ($estadoItem === 'tomado') {
+        $confirmadasHoy++;
+    } else {
+        $pendientesHoy++;
+    }
+}
+
+$saludo = obtenerSaludoHora();
 $fecha_actual = obtenerFechaActualEspanol();
-$activePage = 'inicio';
+$activePage = 'hoy';
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/dashboard.css">
-    <style>
-        .empty-message {
-            text-align: center;
-            color: var(--texto-form);
-            font-size: 1.2rem;
-            padding: 3rem;
-            font-style: italic;
-        }
-        .btn-add-link {
-            display: inline-block;
-            margin-top: 1rem;
-            color: var(--azul-fuerte);
-            text-decoration: underline;
-            font-weight: bold;
-        }
-    </style>
+    <title>Hoy - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
 
     <?php include __DIR__ . '/../includes/navbar.php'; ?>
 
-    <main class="dashboard-container">
-        <header class="dashboard-header">
-            <h1>¡ Hola, <?php echo htmlspecialchars($nombre_mostrar); ?> !</h1>
-            <p class="date-display">Hoy es <?php echo htmlspecialchars($fecha_actual); ?></p>
-            <h2>Medicamentos del día de hoy</h2>
-        </header>
+    <header class="page-header">
+        <div class="page-header-text">
+            <h1><?php echo htmlspecialchars($saludo . ', ' . $nombre_mostrar); ?></h1>
+            <p class="cuerpo-grande text-muted">Hoy es <?php echo htmlspecialchars($fecha_actual); ?></p>
+        </div>
+        <a href="agregar_medicamento.php" class="btn btn-primario">
+            <?php echo medhealthIcon('plus', 24); ?>
+            <span>Agregar medicamento</span>
+        </a>
+    </header>
 
-        <section class="medication-list">
-            <?php if ($num_meds > 0): ?>
-                <?php while ($med = $stmt_meds->fetch(PDO::FETCH_ASSOC)): ?>
-                    <article class="med-card">
-                        <div class="med-info">
-                            <div class="med-title-row">
-                                <h3><?php echo htmlspecialchars($med['nombre']); ?></h3>
-                                <span class="med-indications">Indicaciones: <?php echo htmlspecialchars($med['indicaciones']); ?></span>
+    <?php if ($num_meds > 0): ?>
+        <section class="day-summary-ledger" aria-label="Resumen del día">
+            <div class="ledger-cell">
+                <span>Tomas de hoy</span>
+                <strong><?php echo $num_meds; ?></strong>
+            </div>
+            <div class="ledger-cell is-ok">
+                <span>Confirmadas</span>
+                <strong><?php echo $confirmadasHoy; ?></strong>
+            </div>
+            <div class="ledger-cell is-pending">
+                <span>Por confirmar</span>
+                <strong><?php echo $pendientesHoy; ?></strong>
+            </div>
+        </section>
+
+        <section class="timetable-list" aria-label="Horario de medicamentos del día">
+            <?php $primeraPendienteMarcada = false; ?>
+            <?php foreach ($medicamentos as $med): ?>
+                <?php
+                    $idMed = (int) $med['id_medicamento'];
+                    $estadoHoy = $tomasHoy[$idMed] ?? null;
+                    $estaTomadaHoy = ($estadoHoy === 'tomado');
+                    $esOmitidaHoy = ($estadoHoy === 'no_tomado');
+                    $esPendienteDestacada = (!$estaTomadaHoy && !$primeraPendienteMarcada);
+                    if ($esPendienteDestacada) {
+                        $primeraPendienteMarcada = true;
+                    }
+                    $horaToma = substr((string) ($med['hora_inicio'] ?? ''), 0, 5);
+                    $rowClass = 'timetable-row';
+                    if ($estaTomadaHoy) {
+                        $rowClass .= ' is-done';
+                    } elseif ($esPendienteDestacada) {
+                        $rowClass .= ' is-due';
+                    }
+                ?>
+                <article class="<?php echo $rowClass; ?>">
+                    <div class="timetable-hour">
+                        <?php if ($horaToma !== ''): ?>
+                            <?php echo htmlspecialchars($horaToma); ?>
+                        <?php else: ?>
+                            <span class="timetable-hour-empty">Sin hora</span>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="timetable-info">
+                        <h2 class="timetable-med-title"><?php echo htmlspecialchars($med['nombre']); ?></h2>
+                        <p class="cuerpo text-muted">
+                            <?php echo htmlspecialchars($med['dosis'] . ' · ' . $med['via_administracion']); ?>
+                        </p>
+                        <?php if (!empty($med['indicaciones'])): ?>
+                            <p class="cuerpo"><?php echo htmlspecialchars($med['indicaciones']); ?></p>
+                        <?php endif; ?>
+                        <?php if ($esPendienteDestacada && !$esOmitidaHoy): ?>
+                            <div>
+                                <span class="chip chip-alerta">
+                                    <?php echo medhealthIcon('clock', 18); ?>
+                                    <span>Toma pendiente</span>
+                                </span>
                             </div>
-                            <div class="med-details-grid">
-                                <p><strong>Dosis:</strong> <?php echo htmlspecialchars($med['dosis']); ?></p>
-                                <p><strong>Vía:</strong> <?php echo htmlspecialchars($med['via_administracion']); ?></p>
-                                <p><strong>Progreso:</strong> 0 / <?php echo htmlspecialchars((string) $med['duracion_dias']); ?></p>
-                                <p><strong>Duración:</strong> <?php echo htmlspecialchars((string) $med['duracion_dias']); ?> días</p>
+                        <?php elseif ($esOmitidaHoy): ?>
+                            <div>
+                                <span class="chip chip-error">
+                                    <?php echo medhealthIcon('x', 18); ?>
+                                    <span>Omitido hoy</span>
+                                </span>
                             </div>
-                        </div>
+                        <?php endif; ?>
+                    </div>
 
-                        <aside class="med-actions">
-                            <h4>Confirmación</h4>
-                            <div class="action-buttons">
-                                <a href="../controllers/registrar_toma.php?id=<?php echo (int) $med['id_medicamento']; ?>&status=tomado" 
-                                   class="btn-action btn-take">
-                                    <span class="icon">&#10004;</span> Se tomo
-                                </a>
+                    <div class="timetable-actions">
+                        <?php if ($estaTomadaHoy): ?>
+                            <span class="chip chip-exito" aria-live="polite">
+                                <?php echo medhealthIcon('check', 20); ?>
+                                <span>Tomado hoy</span>
+                            </span>
+                        <?php else: ?>
+                            <a href="../controllers/registrar_toma.php?id=<?php echo $idMed; ?>&status=tomado"
+                               class="btn btn-confirmar">
+                                <?php echo medhealthIcon('check', 22); ?>
+                                <span>Se tomó</span>
+                            </a>
 
-                                <a href="../controllers/posponer_toma.php?id=<?php echo (int) $med['id_medicamento']; ?>" 
-                                   class="btn-action btn-postpone">
-                                    <span class="icon">&#9200;</span> Posponer
-                                </a>
+                            <a href="../controllers/posponer_toma.php?id=<?php echo $idMed; ?>"
+                               class="btn btn-secundario">
+                                <?php echo medhealthIcon('clock', 22); ?>
+                                <span>Posponer 5 min</span>
+                            </a>
 
-                                <a href="notificacion_no_tomada.php?id=<?php echo (int) $med['id_medicamento']; ?>" 
-                                   class="btn-action btn-skip">
-                                    <span class="icon">&#10006;</span> No se tomo
-                                </a>
-                            </div>
-                        </aside>
-                    </article>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <article class="med-card">
-                    <div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                        <div class="empty-message">
-                            Aun no tienes medicamentos registrados
-                            <br>
-                            <a href="medicamentos.php" class="btn-add-link">+ Registrar uno ahora</a>
-                        </div>
+                            <a href="notificacion_no_tomada.php?id=<?php echo $idMed; ?>"
+                               class="btn btn-peligro-contorno">
+                                <?php echo medhealthIcon('x', 22); ?>
+                                <span>No se tomó</span>
+                            </a>
+                        <?php endif; ?>
                     </div>
                 </article>
-            <?php endif; ?>
+            <?php endforeach; ?>
         </section>
-    </main>
+    <?php else: ?>
+        <article class="tarjeta empty-state">
+            <span class="icon-circle icon-circle-80">
+                <?php echo medhealthIcon('pill', 36); ?>
+            </span>
+            <h2>Hoy no tienes medicinas pendientes</h2>
+            <p class="cuerpo text-muted">Agrega tu primer medicamento para ver aquí tu horario diario con letras grandes y botones claros.</p>
+            <a href="agregar_medicamento.php" class="btn btn-primario">
+                <?php echo medhealthIcon('plus', 24); ?>
+                <span>Agregar medicamento</span>
+            </a>
+        </article>
+    <?php endif; ?>
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 

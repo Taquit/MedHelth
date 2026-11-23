@@ -1,6 +1,5 @@
 <?php
 include_once __DIR__ . '/../includes/auth.php';
-include_once __DIR__ . '/../includes/helpers.php';
 include_once __DIR__ . '/../models/Cuidador.php';
 
 requireLogin('login.html');
@@ -12,136 +11,165 @@ $id_paciente = obtenerIdPacienteActual($db);
 
 $cuidadorModel = new Cuidador($db);
 $activo = $cuidadorModel->obtenerActivo($id_paciente);
-
-$nombre_activo = $activo ? $activo['nombre'] : 'Sin asignar';
-$paterno_activo = $activo ? $activo['apellido_paterno'] : '';
-$materno_activo = $activo ? $activo['apellido_materno'] : '';
-$telefono_activo = $activo ? $activo['telefono'] : '';
-$correo_activo = $activo ? ($activo['correo'] ?? '') : '';
-
 $stmt_historial = $cuidadorModel->obtenerHistorial($id_paciente);
-$activePage = 'perfil';
+$historial = $stmt_historial->fetchAll(PDO::FETCH_ASSOC);
+
+$exito = $_GET['exito'] ?? '';
+$error = $_GET['error'] ?? '';
+$activePage = 'cuidador';
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Cuidador - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/perfil_cuidador.css">
+    <title>Mi cuidador - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
 
     <?php include __DIR__ . '/../includes/navbar.php'; ?>
 
-    <main class="profile-container">
-        <aside class="profile-sidebar">
-            <a href="perfil.php" class="sidebar-btn">Datos del Paciente</a>
-            <button class="sidebar-btn active">Cuidador</button>
-        </aside>
+    <header class="page-header">
+        <div class="page-header-text">
+            <h1>Mi cuidador</h1>
+            <p class="cuerpo text-muted">Consulta a tu cuidador activo y el historial de cuidadores asignados.</p>
+        </div>
+        <a href="alta_cuidador.php" class="btn btn-primario">
+            <?php echo medhealthIcon('plus', 24); ?>
+            <span>Registrar nuevo cuidador</span>
+        </a>
+    </header>
 
-        <section class="profile-card">
-            <h2>Datos del Cuidador</h2>
+    <?php if ($exito === '1'): ?>
+        <div class="aviso aviso-exito" role="status" aria-live="polite">
+            <?php echo medhealthIcon('check', 24); ?>
+            <span>Cuidador registrado y asignado correctamente.</span>
+        </div>
+    <?php elseif ($exito === 'baja'): ?>
+        <div class="aviso aviso-info" role="status" aria-live="polite">
+            <?php echo medhealthIcon('check', 24); ?>
+            <span>El cuidador fue dado de baja y se conserva en tu historial.</span>
+        </div>
+    <?php elseif ($error === 'baja'): ?>
+        <div class="aviso aviso-error" role="alert" aria-live="polite">
+            <?php echo medhealthIcon('alert-triangle', 24); ?>
+            <span>No se pudo procesar la baja del cuidador. Inténtalo de nuevo.</span>
+        </div>
+    <?php endif; ?>
 
-            <div class="profile-layout">
-                <div class="avatar-column">
-                    <div class="avatar-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    <?php if ($activo): ?>
+        <?php
+            $nombreCompletoActivo = trim(
+                $activo['nombre'] . ' ' . $activo['apellido_paterno'] . ' ' . ($activo['apellido_materno'] ?? '')
+            );
+            $iniciales = obtenerIniciales($nombreCompletoActivo);
+            $desdeFecha = formatearFechaEspanol($activo['fecha_inicio'] ?? null);
+        ?>
+        <section class="tarjeta" aria-label="Cuidador activo">
+            <div class="caregiver-card-layout">
+                <div class="caregiver-identity">
+                    <div class="avatar-iniciales" aria-hidden="true">
+                        <?php echo htmlspecialchars($iniciales); ?>
                     </div>
-                    
-                    <div class="caregiver-actions">
-                        <a href="alta_cuidador.php" class="btn-action btn-alta" style="text-decoration:none; display:block; text-align:center;">
-                            Dar de alta
-                        </a>
-                        
-                        <?php if ($activo): ?>
-                            <a href="baja_cuidador.php" class="btn-action btn-baja" style="text-decoration:none; display:block; text-align:center;">
-                                Dar de baja
-                            </a>
-                        <?php else: ?>
-                            <button class="btn-action btn-baja" style="opacity: 0.5; cursor: not-allowed;" disabled>Dar de baja</button>
-                        <?php endif; ?>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <h2><?php echo htmlspecialchars($nombreCompletoActivo); ?></h2>
+                            <span class="chip chip-exito">
+                                <?php echo medhealthIcon('check', 18); ?>
+                                <span>Activo</span>
+                            </span>
+                        </div>
+                        <p class="cuerpo text-muted">
+                            <?php echo htmlspecialchars($activo['parentesco'] ?? ''); ?> · Desde <?php echo htmlspecialchars($desdeFecha); ?>
+                        </p>
                     </div>
                 </div>
 
-                <div class="form-column">
-                    <form action="#">
-                        <div class="form-group">
-                            <label>Nombre(s)</label>
-                            <input type="text" value="<?php echo htmlspecialchars($nombre_activo); ?>" readonly>
-                        </div>
-
-                        <div class="row-group">
-                            <div class="form-group">
-                                <label>Apellido Paterno</label>
-                                <input type="text" value="<?php echo htmlspecialchars($paterno_activo); ?>" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label>Apellido Materno</label>
-                                <input type="text" value="<?php echo htmlspecialchars($materno_activo); ?>" readonly>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Correo</label>
-                            <input type="email" value="<?php echo htmlspecialchars($correo_activo); ?>" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Teléfono de contacto</label>
-                            <input type="tel" value="<?php echo htmlspecialchars($telefono_activo); ?>" readonly>
-                        </div>
-                    </form>
+                <div class="med-day-actions">
+                    <a href="alta_cuidador.php" class="btn btn-primario">Registrar nuevo cuidador</a>
+                    <a href="baja_cuidador.php" class="btn btn-peligro">Dar de baja</a>
                 </div>
             </div>
 
-            <div class="caregiver-history">
-                <h3>Historial del cuidador</h3>
-                <div class="table-responsive">
-                    <table class="history-table">
+            <div class="caregiver-details-grid">
+                <div class="detail-item">
+                    <?php echo medhealthIcon('phone', 24); ?>
+                    <div>
+                        <span class="cuerpo-bold">Teléfono: </span>
+                        <span><?php echo htmlspecialchars($activo['telefono'] ?? ''); ?></span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <?php echo medhealthIcon('mail', 24); ?>
+                    <div>
+                        <span class="cuerpo-bold">Correo: </span>
+                        <span><?php echo htmlspecialchars($activo['correo'] ?? ''); ?></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    <?php else: ?>
+        <section class="tarjeta empty-state" aria-label="Sin cuidador activo">
+            <span class="icon-circle icon-circle-80">
+                <?php echo medhealthIcon('heart', 36); ?>
+            </span>
+            <h2>Aún no tienes un cuidador activo</h2>
+            <p class="cuerpo text-muted">Puedes registrar a un familiar o persona de confianza para acompañarte.</p>
+            <a href="alta_cuidador.php" class="btn btn-primario">Registrar cuidador</a>
+        </section>
+    <?php endif; ?>
+
+    <section style="display: flex; flex-direction: column; gap: 16px;">
+        <h2>Historial de cuidadores</h2>
+
+        <?php if (count($historial) > 0): ?>
+            <div class="tabla-contenedor">
+                <div class="tabla-scroll">
+                    <table class="tabla">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Nombre del cuidador</th>
-                                <th>Fecha inicio</th>
-                                <th>Fecha fin</th>
+                                <th>Cuidador</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
                                 <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $count = 1;
-                            while ($hist = $stmt_historial->fetch(PDO::FETCH_ASSOC)):
-                                if ($hist['fecha_fin'] === null) {
-                                    $estado = 'Alta';
-                                    $clase_badge = 'badge-alta';
-                                    $fecha_fin_txt = '-';
-                                } else {
-                                    $estado = 'Baja';
-                                    $clase_badge = 'badge-baja';
-                                    $fecha_fin_txt = formatearFechaEspanol($hist['fecha_fin']);
-                                }
-                                $nombre_completo = trim($hist['nombre'] . " " . $hist['apellido_paterno']);
-                            ?>
+                            <?php foreach ($historial as $hist): ?>
+                                <?php
+                                    $esAlta = ($hist['fecha_fin'] === null);
+                                    $nombreHist = trim($hist['nombre'] . ' ' . $hist['apellido_paterno']);
+                                ?>
                                 <tr>
-                                    <td class="col-id"><?php echo $count++; ?></td>
-                                    <td><?php echo htmlspecialchars($nombre_completo); ?></td>
+                                    <td><strong><?php echo htmlspecialchars($nombreHist); ?></strong></td>
                                     <td><?php echo htmlspecialchars(formatearFechaEspanol($hist['fecha_inicio'])); ?></td>
-                                    <td><?php echo htmlspecialchars($fecha_fin_txt); ?></td>
-                                    <td><span class="badge <?php echo $clase_badge; ?>"><?php echo $estado; ?></span></td>
+                                    <td><?php echo $esAlta ? '-' : htmlspecialchars(formatearFechaEspanol($hist['fecha_fin'])); ?></td>
+                                    <td>
+                                        <?php if ($esAlta): ?>
+                                            <span class="chip chip-exito">
+                                                <?php echo medhealthIcon('check', 18); ?>
+                                                <span>Alta</span>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="chip chip-error">
+                                                <?php echo medhealthIcon('x', 18); ?>
+                                                <span>Baja</span>
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
-                            <?php endwhile; ?>
-                            
-                            <?php if ($count === 1): ?>
-                                <tr><td colspan="5" style="text-align:center; padding:1rem; color:#888;">No hay historial disponible.</td></tr>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </section>
-    </main>
+        <?php else: ?>
+            <div class="tarjeta">
+                <p class="cuerpo text-muted">No hay historial de cuidadores disponible.</p>
+            </div>
+        <?php endif; ?>
+    </section>
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 

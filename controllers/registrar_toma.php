@@ -7,6 +7,12 @@ include_once __DIR__ . '/../models/Notificacion.php';
 requireLogin('../views/login.html');
 
 if (isset($_GET['id']) && isset($_GET['status'])) {
+    $status = (string) $_GET['status'];
+    if ($status !== 'tomado' && $status !== 'no_tomado') {
+        header("Location: ../views/dashboard.php");
+        exit;
+    }
+
     $database = new Database();
     $db = $database->getConnection();
 
@@ -14,19 +20,21 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
     $id_medicamento = (int) $_GET['id'];
 
     $medicamentoModel = new Medicamento($db);
-    if (!$medicamentoModel->perteneceAPaciente($id_medicamento, $id_paciente)) {
+    $medicamentoModel->id_medicamento = $id_medicamento;
+    if (!$medicamentoModel->leerUno($id_paciente)) {
         header("Location: ../views/dashboard.php");
         exit;
     }
 
     $historial = new HistorialToma($db);
     $historial->id_medicamento = $id_medicamento;
-    $historial->estado = $_GET['status'];
+    $historial->estado = $status;
 
     if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['motivo'])) {
-        $historial->observaciones = $_POST['motivo'];
+        $motivo = trim((string) $_POST['motivo']);
+        $historial->observaciones = ($motivo !== '') ? $motivo : null;
     } else {
-        $historial->observaciones = "Registro rápido desde Dashboard";
+        $historial->observaciones = ($status === 'tomado') ? 'Registro rápido desde panel' : null;
     }
 
     if ($historial->registrar()) {
@@ -38,13 +46,21 @@ if (isset($_GET['id']) && isset($_GET['status'])) {
         }
 
         if ($historial->estado === 'tomado') {
-            header("Location: ../views/notificacion_tomada.html");
+            $nombreUsuario = htmlspecialchars_decode(obtenerNombreUsuarioActual($db), ENT_QUOTES);
+            $nombreMedicamento = htmlspecialchars_decode((string) $medicamentoModel->nombre, ENT_QUOTES);
+            $query = http_build_query([
+                'nombre' => $nombreUsuario,
+                'medicamento' => $nombreMedicamento,
+                'hora' => date('H:i'),
+            ]);
+            header("Location: ../views/notificacion_tomada.html?" . $query);
         } else {
             header("Location: ../views/dashboard.php");
         }
         exit;
     } else {
-        echo "Error al registrar la toma.";
+        header("Location: ../views/dashboard.php");
+        exit;
     }
 } else {
     header("Location: ../views/dashboard.php");

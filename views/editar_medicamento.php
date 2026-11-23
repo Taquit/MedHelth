@@ -1,6 +1,5 @@
 <?php
 include_once __DIR__ . '/../includes/auth.php';
-include_once __DIR__ . '/../includes/helpers.php';
 include_once __DIR__ . '/../models/Medicamento.php';
 
 requireLogin('login.html');
@@ -29,6 +28,16 @@ $dur_unit = $duracionDesglosada['unidad'];
 
 $frec_cant = (int) $medicamento->frecuencia_horas;
 $frec_unit = 'horas';
+
+$viasDisponibles = [
+    'Oral', 'Tópica', 'Inhalada', 'Oftálmica', 'Ótica',
+    'Nasal', 'Sublingual', 'Intramuscular', 'Subcutánea', 'Intravenosa', 'Otra'
+];
+$viaActual = trim((string) $medicamento->via_administracion);
+if ($viaActual !== '' && !in_array($viaActual, $viasDisponibles, true)) {
+    array_unshift($viasDisponibles, $viaActual);
+}
+
 $activePage = 'medicamentos';
 ?>
 <!DOCTYPE html>
@@ -36,81 +45,95 @@ $activePage = 'medicamentos';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Medicamento - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/agregar_medicamento.css"> 
+    <title>Editar <?php echo htmlspecialchars($medicamento->nombre); ?> - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
 
     <?php include __DIR__ . '/../includes/navbar.php'; ?>
 
-    <main class="overlay-container">
-        <div class="modal-card">
-            <a href="medicamentos.php" class="close-btn">&#10005;</a>
+    <header class="page-header">
+        <div class="page-header-text">
+            <h1>Editar <?php echo htmlspecialchars($medicamento->nombre); ?></h1>
+            <p class="cuerpo text-muted">Actualiza la dosis, horario o indicaciones de tu medicamento.</p>
+        </div>
+    </header>
 
-            <div class="modal-header">
-                <h2>Editar medicamento</h2>
-            </div>
+    <section class="tarjeta tarjeta-form tarjeta-900">
+        <form action="../controllers/actualizar_medicamento.php" method="POST" class="form-stack">
+            <input type="hidden" name="id_medicamento" value="<?php echo (int) $medicamento->id_medicamento; ?>">
 
-            <form action="../controllers/actualizar_medicamento.php" method="POST">
-                <input type="hidden" name="id_medicamento" value="<?php echo (int) $medicamento->id_medicamento; ?>">
-
-                <div class="form-group">
-                    <label for="nombre">Nombre del Medicamento</label>
+            <div class="form-grid-2">
+                <div class="campo">
+                    <label for="nombre">Nombre del medicamento</label>
                     <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($medicamento->nombre); ?>" required>
                 </div>
 
-                <div class="form-group">
+                <div class="campo">
                     <label for="dosis">Dosis</label>
                     <input type="text" id="dosis" name="dosis" value="<?php echo htmlspecialchars($medicamento->dosis); ?>" required>
                 </div>
 
-                <div class="form-group">
+                <div class="campo">
                     <label for="via">Vía de administración</label>
-                    <input type="text" id="via" name="via" value="<?php echo htmlspecialchars($medicamento->via_administracion); ?>" required>
+                    <div class="select-wrapper">
+                        <select id="via" name="via" required>
+                            <?php foreach ($viasDisponibles as $via): ?>
+                                <option value="<?php echo htmlspecialchars($via); ?>" <?php echo ($viaActual === $via) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($via); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <span class="select-chevron"><?php echo medhealthIcon('chevron-down', 24); ?></span>
+                    </div>
                 </div>
 
-                <div class="form-group">
+                <div class="campo">
                     <label for="hora_inicio">Hora de la primera toma</label>
-                    <div class="time-input-container">
-                        <input type="time" id="hora_inicio" name="hora_inicio" class="digital-clock-input" value="<?php echo htmlspecialchars($medicamento->hora_inicio); ?>" required>
+                    <input type="time" id="hora_inicio" name="hora_inicio" value="<?php echo htmlspecialchars($medicamento->hora_inicio); ?>" required>
+                </div>
+
+                <div class="campo">
+                    <label for="frecuencia_cant">Frecuencia (cada cuánto)</label>
+                    <div class="campo-split">
+                        <input type="number" id="frecuencia_cant" name="frecuencia_cant" min="1" value="<?php echo $frec_cant; ?>" required>
+                        <div class="select-wrapper">
+                            <select id="frecuencia_unidad" name="frecuencia_unidad" aria-label="Unidad de frecuencia">
+                                <option value="horas" <?php echo ($frec_unit === 'horas') ? 'selected' : ''; ?>>Horas</option>
+                                <option value="minutos" <?php echo ($frec_unit === 'minutos') ? 'selected' : ''; ?>>Minutos</option>
+                            </select>
+                            <span class="select-chevron"><?php echo medhealthIcon('chevron-down', 24); ?></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Frecuencia (Cada cuánto)</label>
-                    <div class="split-inputs">
-                        <input type="number" name="frecuencia_cant" class="input-short" value="<?php echo $frec_cant; ?>" required>
-                        <select name="frecuencia_unidad" class="input-medium">
-                            <option value="horas" <?php echo ($frec_unit === 'horas') ? 'selected' : ''; ?>>Horas</option>
-                            <option value="minutos" <?php echo ($frec_unit === 'minutos') ? 'selected' : ''; ?>>Minutos</option>
-                        </select>
+                <div class="campo">
+                    <label for="duracion_cant">Duración del tratamiento</label>
+                    <div class="campo-split">
+                        <input type="number" id="duracion_cant" name="duracion_cant" min="1" value="<?php echo $dur_cant; ?>" required>
+                        <div class="select-wrapper">
+                            <select id="duracion_unidad" name="duracion_unidad" aria-label="Unidad de duración">
+                                <option value="dias" <?php echo ($dur_unit === 'dias') ? 'selected' : ''; ?>>Días</option>
+                                <option value="semanas" <?php echo ($dur_unit === 'semanas') ? 'selected' : ''; ?>>Semanas</option>
+                                <option value="meses" <?php echo ($dur_unit === 'meses') ? 'selected' : ''; ?>>Meses</option>
+                            </select>
+                            <span class="select-chevron"><?php echo medhealthIcon('chevron-down', 24); ?></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Duración del tratamiento</label>
-                    <div class="split-inputs">
-                        <input type="number" name="duracion_cant" class="input-short" value="<?php echo $dur_cant; ?>" required>
-                        <select name="duracion_unidad" class="input-medium">
-                            <option value="dias" <?php echo ($dur_unit === 'dias') ? 'selected' : ''; ?>>Días</option>
-                            <option value="semanas" <?php echo ($dur_unit === 'semanas') ? 'selected' : ''; ?>>Semanas</option>
-                            <option value="meses" <?php echo ($dur_unit === 'meses') ? 'selected' : ''; ?>>Meses</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
+                <div class="campo col-span-2">
                     <label for="indicaciones">Indicaciones específicas</label>
-                    <input type="text" id="indicaciones" name="indicaciones" value="<?php echo htmlspecialchars($medicamento->indicaciones); ?>" required>
+                    <textarea id="indicaciones" name="indicaciones" required><?php echo htmlspecialchars($medicamento->indicaciones); ?></textarea>
                 </div>
+            </div>
 
-                <div class="form-actions">
-                    <button type="submit" class="btn-agregar">Guardar Cambios</button>
-                </div>
-            </form>
-        </div>
-    </main>
+            <div class="form-actions-row">
+                <button type="submit" class="btn btn-primario">Guardar cambios</button>
+                <a href="medicamentos.php" class="btn btn-secundario">Cancelar</a>
+            </div>
+        </form>
+    </section>
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 

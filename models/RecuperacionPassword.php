@@ -59,14 +59,16 @@ class RecuperacionPassword {
      * @return bool
      */
     public function validarToken(string $token): bool {
+        $ahora = date('Y-m-d H:i:s');
         $query = "SELECT * FROM " . $this->table_name . "
                   WHERE token = :token
                     AND usado = 0
-                    AND fecha_expiracion >= NOW()
+                    AND fecha_expiracion >= :ahora
                   LIMIT 1";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(":token", $token);
+        $stmt->bindParam(":ahora", $ahora);
         $stmt->execute();
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);

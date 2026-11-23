@@ -1,0 +1,30 @@
+[
+  {
+    "id_reporte": 1,
+    "id_paciente": 1,
+    "id_medicamento": null,
+    "fecha": "2026-11-01 00:00:00",
+    "generado_por": "sistema"
+  },
+  {
+    "id_reporte": 2,
+    "id_paciente": 1,
+    "id_medicamento": 1,
+    "fecha": "2026-11-15 18:30:00",
+    "generado_por": "cuidador"
+  },
+  {
+    "id_reporte": 3,
+    "id_paciente": 2,
+    "id_medicamento": 5,
+    "fecha": "2026-11-16 22:00:00",
+    "generado_por": "sistema"
+  },
+  {
+    "id_reporte": 4,
+    "id_paciente": 3,
+    "id_medicamento": null,
+    "fecha": "2026-11-17 09:00:00",
+    "generado_por": "paciente"
+  }
+]

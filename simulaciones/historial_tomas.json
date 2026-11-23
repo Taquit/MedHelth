@@ -1,0 +1,100 @@
+[
+  {
+    "id_toma": 1,
+    "id_medicamento": 1,
+    "fecha_hora": "2026-11-15 08:05:00",
+    "estado": "tomado",
+    "observaciones": "Toma matutina realizada en tiempo y forma."
+  },
+  {
+    "id_toma": 2,
+    "id_medicamento": 2,
+    "fecha_hora": "2026-11-15 13:10:00",
+    "estado": "tomado",
+    "observaciones": "Toma despues de la comida."
+  },
+  {
+    "id_toma": 3,
+    "id_medicamento": 1,
+    "fecha_hora": "2026-11-15 20:15:00",
+    "estado": "tomado",
+    "observaciones": "Toma nocturna registrada sin efectos secundarios."
+  },
+  {
+    "id_toma": 4,
+    "id_medicamento": 3,
+    "fecha_hora": "2026-11-15 21:05:00",
+    "estado": "tomado",
+    "observaciones": "Toma antes de dormir."
+  },
+  {
+    "id_toma": 5,
+    "id_medicamento": 1,
+    "fecha_hora": "2026-11-16 08:02:00",
+    "estado": "tomado",
+    "observaciones": "Toma matutina puntual."
+  },
+  {
+    "id_toma": 6,
+    "id_medicamento": 2,
+    "fecha_hora": "2026-11-16 13:20:00",
+    "estado": "tomado",
+    "observaciones": "Toma realizada acompanada de alimentos."
+  },
+  {
+    "id_toma": 7,
+    "id_medicamento": 1,
+    "fecha_hora": "2026-11-16 20:00:00",
+    "estado": "tomado",
+    "observaciones": "Toma nocturna confirmada."
+  },
+  {
+    "id_toma": 8,
+    "id_medicamento": 3,
+    "fecha_hora": "2026-11-16 21:00:00",
+    "estado": "tomado",
+    "observaciones": "Toma nocturna puntual."
+  },
+  {
+    "id_toma": 9,
+    "id_medicamento": 1,
+    "fecha_hora": "2026-11-17 08:00:00",
+    "estado": "tomado",
+    "observaciones": "Toma matutina completada."
+  },
+  {
+    "id_toma": 10,
+    "id_medicamento": 4,
+    "fecha_hora": "2026-11-16 07:10:00",
+    "estado": "tomado",
+    "observaciones": "Alivio de dolor postoperatorio moderado."
+  },
+  {
+    "id_toma": 11,
+    "id_medicamento": 4,
+    "fecha_hora": "2026-11-16 15:30:00",
+    "estado": "no_tomado",
+    "observaciones": "Paciente refirio que no presentaba dolor al momento de la toma."
+  },
+  {
+    "id_toma": 12,
+    "id_medicamento": 5,
+    "fecha_hora": "2026-11-16 21:45:00",
+    "estado": "no_tomado",
+    "observaciones": "Omision voluntaria por presencia de nauseas leves."
+  },
+  {
+    "id_toma": 13,
+    "id_medicamento": 6,
+    "fecha_hora": "2026-11-10 08:30:00",
+    "estado": "tomado",
+    "observaciones": "Dosis semanal tomada de acuerdo con indicacion medica."
+  },
+  {
+    "id_toma": 14,
+    "id_medicamento": 6,
+    "fecha_hora": "2026-11-17 08:15:00",
+    "estado": "tomado",
+    "observaciones": "Dosis semanal tomada con desayuno ligero."
+  }
+]

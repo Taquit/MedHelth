@@ -79,7 +79,7 @@ class Cuidador {
 
     // --- D) OBTENER CUIDADOR ACTIVO (Para la vista del perfil) ---
     public function obtenerActivo($id_paciente) {
-        $query = "SELECT c.*, u.correo 
+        $query = "SELECT c.*, u.correo, pc.fecha_inicio 
                   FROM " . $this->table_name . " c
                   JOIN " . $this->table_relacion . " pc ON c.id_cuidador = pc.id_cuidador
                   JOIN usuarios u ON c.id_usuario = u.id_usuario

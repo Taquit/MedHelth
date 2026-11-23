@@ -22,8 +22,8 @@ Representa la tabla `usuarios`.
 Representa la tabla `recuperacion_password`.
 - **Propiedades públicas**: `$id_recuperacion`, `$id_usuario`, `$token`, `$fecha_solicitud`, `$fecha_expiracion`, `$usado`.
 - **Métodos**:
-  - `public function crear(int $minutosValidez = 60)`: Genera un token aleatorio seguro (`bin2hex(random_bytes(32))`) si no fue provisto, calcula `fecha_solicitud` y `fecha_expiracion`, inserta con `usado = 0` y asigna `$this->id_recuperacion`. Retorna `bool`.
-  - `public function validarToken(string $token): bool`: Consulta si el token existe, tiene `usado = 0` y `fecha_expiracion >= NOW()`. Si es válido, hidrata las propiedades de la instancia y retorna `true`.
+  - `public function crear(int $minutosValidez = 60)`: Genera un token aleatorio seguro (`bin2hex(random_bytes(32))`) si no fue provisto, calcula `fecha_solicitud` y `fecha_expiracion` en horario PHP, inserta con `usado = 0` y asigna `$this->id_recuperacion`. Retorna `bool`.
+  - `public function validarToken(string $token): bool`: Consulta si el token existe, tiene `usado = 0` y `fecha_expiracion >= :ahora` (`date('Y-m-d H:i:s')`). Si es válido, hidrata las propiedades de la instancia y retorna `true`.
   - `public function marcarComoUsado(): bool`: Actualiza `usado = 1` para `$this->id_recuperacion`. Retorna `bool`.
 
 ---
@@ -44,8 +44,8 @@ Gestiona las tablas `cuidadores` y `paciente_cuidador`.
   - `public function crear()`: Sanitiza propiedades, inserta en `cuidadores`, asigna `$this->id_cuidador = $this->conn->lastInsertId()` y retorna `bool`.
   - `public function asignarPaciente($id_paciente)`: Invoca `$this->darBaja($id_paciente)` para cerrar asignaciones previas y registra una nueva fila en `paciente_cuidador` con `fecha_inicio = CURDATE()`. Retorna `bool`.
   - `public function darBaja($id_paciente)`: Actualiza `fecha_fin = CURDATE()` en `paciente_cuidador` para los registros activos (`fecha_fin IS NULL`) del paciente. Retorna `bool`.
-  - `public function obtenerActivo($id_paciente)`: Ejecuta un `JOIN` entre `cuidadores`, `paciente_cuidador` y `usuarios` donde `pc.id_paciente = ? AND pc.fecha_fin IS NULL`. Retorna `array|false` (`PDO::FETCH_ASSOC`).
-  - `public function obtenerHistorial($id_paciente)`: Consulta todos los cuidadores asociados a `$id_paciente` ordenados por `fecha_inicio DESC`. Retorna `PDOStatement`.
+  - `public function obtenerActivo($id_paciente)`: Ejecuta un `JOIN` entre `cuidadores`, `paciente_cuidador` y `usuarios` donde `pc.id_paciente = ? AND pc.fecha_fin IS NULL`, retornando `c.*`, `u.correo` y `pc.fecha_inicio`. Retorna `array|false` (`PDO::FETCH_ASSOC`).
+  - `public function obtenerHistorial($id_paciente)`: Consulta los cuidadores asociados a `$id_paciente` proyectando `c.nombre`, `c.apellido_paterno`, `pc.fecha_inicio` y `pc.fecha_fin`, ordenados por `fecha_inicio DESC`. Retorna `PDOStatement`.
 
 ---
 
@@ -76,6 +76,8 @@ Representa la tabla `historial_tomas`.
 - **Métodos**:
   - `public function registrar()`: Sanitiza `$this->observaciones`, inserta una toma con `$this->fecha_hora = date('Y-m-d H:i:s')`, asigna `$this->id_toma = $this->conn->lastInsertId()` y retorna `bool`.
   - `public function leerPorPaciente($id_paciente)`: Consulta el historial de tomas haciendo `JOIN` con `medicamentos` y `recetas` para un `$id_paciente`, ordenado por `fecha_hora DESC`. Retorna `PDOStatement`.
+  - `public function obtenerTomasHoyPorPaciente(int $id_paciente): array`: Consulta las tomas registradas en la fecha actual (`DATE(h.fecha_hora) = date('Y-m-d')`) ordenadas cronológicamente (`ASC`) y retorna `array<int, string>` mapeando `id_medicamento => estado` (conservando el último estado registrado hoy por cada medicamento).
+  - `public function contarDiasTomadosPorPaciente(int $id_paciente): array`: Cuenta los días distintos con estado `'tomado'` por medicamento y retorna `array<int, int>` mapeando `id_medicamento => dias_tomados`.
 
 ---
 
@@ -84,8 +86,8 @@ Representa la tabla `notificaciones`.
 - **Propiedades públicas**: `$id_notificacion`, `$id_medicamento`, `$id_toma`, `$fecha_hora_programada`, `$pospuesta_veces`, `$estado_alerta`, `$notificar_cuidador`.
 - **Métodos**:
   - `public function crear(): bool`: Inserta una alerta programada (soportando `id_toma = NULL`), asigna `$this->id_notificacion = $this->conn->lastInsertId()` y retorna `bool`.
-  - `public function posponerPorMedicamento(int $id_medicamento, int $minutos = 5): bool`: Busca la alerta activa (`'pendiente'` o `'pospuesta'`) más reciente del medicamento, suma `$minutos` a `fecha_hora_programada`, incrementa `pospuesta_veces` y cambia `estado_alerta` a `'pospuesta'`. Si no existe alerta previa, crea una nueva pospuesta.
-  - `public function resolverPorMedicamento(int $id_medicamento, int $id_toma): bool`: Vincula la notificación activa del medicamento con el registro `$id_toma` de `historial_tomas` y actualiza `estado_alerta = 'atendida'`.
+  - `public function posponerPorMedicamento(int $id_medicamento, int $minutos = 5): bool`: Busca la alerta activa (`'pendiente'` o `'pospuesta'`) más reciente del medicamento. Si existe, actualiza `fecha_hora_programada` a `$minutos` desde la hora actual del servidor (`time() + ($minutos * 60)`), incrementa `pospuesta_veces` y cambia `estado_alerta` a `'pospuesta'` (sin mutar propiedades en la instancia en memoria). Si no existe alerta previa, crea una nueva pospuesta mediante `crear()`.
+  - `public function resolverPorMedicamento(int $id_medicamento, int $id_toma): bool`: Vincula la notificación activa del medicamento con el registro `$id_toma` de `historial_tomas` y actualiza `estado_alerta = 'atendida'`. Retorna `false` si no existe ninguna alerta `'pendiente'` o `'pospuesta'`.
   - `public function leerPendientesPorPaciente(int $id_paciente)`: Obtiene todas las notificaciones en estado `'pendiente'` o `'pospuesta'` de un paciente ordenadas por `fecha_hora_programada ASC`. Retorna `PDOStatement`.
 
 ---
@@ -94,5 +96,5 @@ Representa la tabla `notificaciones`.
 Representa la tabla `reportes`.
 - **Propiedades públicas**: `$id_reporte`, `$id_paciente`, `$id_medicamento`, `$fecha`, `$generado_por`.
 - **Métodos**:
-  - `public function crear()`: Inserta un registro de reporte soportando `id_medicamento = NULL` (`PDO::PARAM_NULL` para reportes generales de todo el tratamiento) y validando `generado_por` dentro de `ENUM('sistema','cuidador','paciente')`. Asigna `$this->id_reporte = $this->conn->lastInsertId()` y retorna `bool`.
+  - `public function crear()`: Inserta un registro de reporte soportando `id_medicamento = NULL` (`PDO::PARAM_NULL` para reportes generales de todo el tratamiento); si `generado_por` no pertenece al `ENUM('sistema','cuidador','paciente')`, asigna `'sistema'` por defecto. Asigna `$this->id_reporte = $this->conn->lastInsertId()` y retorna `bool`.
   - `public function leerPorPaciente(int $id_paciente)`: Consulta los reportes generados para un paciente con `LEFT JOIN medicamentos`. Retorna `PDOStatement`.

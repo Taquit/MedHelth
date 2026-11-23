@@ -1,5 +1,6 @@
 <?php
 include_once __DIR__ . '/../config/Database.php';
+include_once __DIR__ . '/../includes/helpers.php';
 include_once __DIR__ . '/../models/Usuario.php';
 include_once __DIR__ . '/../models/RecuperacionPassword.php';
 
@@ -20,10 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !empty($_POST['email'])) {
         }
     }
 
-    echo "<script>
-            alert('Si el correo está registrado, recibirás instrucciones para restablecer tu contraseña.');
-            window.location.href = '../views/login.html';
-          </script>";
+    header("Location: ../views/login.html?recuperacion=enviada");
     exit;
 } else {
     header("Location: ../views/olvide_contrasena.html");

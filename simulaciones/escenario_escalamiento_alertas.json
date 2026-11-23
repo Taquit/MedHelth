@@ -1,0 +1,97 @@
+{
+  "titulo_simulacion": "Simulacion del Ciclo de Vida y Escalamiento de Alerta",
+  "descripcion": "Traza temporal que documenta el comportamiento del sistema cuando una dosis es postergada repetidamente y finalmente escala al cuidador.",
+  "entidades_involucradas": {
+    "id_paciente": 2,
+    "paciente": "Carlos Ruiz Morales",
+    "id_cuidador": 2,
+    "cuidador": "Roberto Sanchez Morales",
+    "telefono_cuidador": "5544332211",
+    "id_medicamento": 5,
+    "medicamento": "Tramadol 50 mg",
+    "hora_programada": "2026-11-16 21:00:00"
+  },
+  "linea_de_tiempo_eventos": [
+    {
+      "paso": 1,
+      "marca_tiempo": "2026-11-16 21:00:00",
+      "evento": "DISPARO_RECORDATORIO_INICIAL",
+      "accion_actor": "Sistema genera notificacion sonora y visual en pantalla P6",
+      "estado_notificacion": {
+        "id_notificacion": 9,
+        "pospuesta_veces": 0,
+        "estado_alerta": "pendiente",
+        "notificar_cuidador": 0
+      },
+      "efecto_interfaz": "Aparece modal de recordatorio con botones Tomar Ahora y Posponer 10 min."
+    },
+    {
+      "paso": 2,
+      "marca_tiempo": "2026-11-16 21:05:00",
+      "evento": "PRIMERA_POSPOSICION",
+      "accion_actor": "Paciente pulsa boton Posponer 10 min",
+      "estado_notificacion": {
+        "id_notificacion": 9,
+        "pospuesta_veces": 1,
+        "estado_alerta": "pospuesta",
+        "notificar_cuidador": 0,
+        "proximo_disparo": "2026-11-16 21:15:00"
+      },
+      "efecto_interfaz": "Modal se oculta y programa temporizador interno para 10 minutos."
+    },
+    {
+      "paso": 3,
+      "marca_tiempo": "2026-11-16 21:15:00",
+      "evento": "SEGUNDA_POSPOSICION",
+      "accion_actor": "Paciente pulsa nuevamente Posponer 10 min",
+      "estado_notificacion": {
+        "id_notificacion": 9,
+        "pospuesta_veces": 2,
+        "estado_alerta": "pospuesta",
+        "notificar_cuidador": 0,
+        "proximo_disparo": "2026-11-16 21:25:00"
+      },
+      "efecto_interfaz": "Aviso en pantalla: Limite de posposiciones alcanzado (maximo 2)."
+    },
+    {
+      "paso": 4,
+      "marca_tiempo": "2026-11-16 21:40:00",
+      "evento": "VENCIMIENTO_Y_ESCALAMIENTO",
+      "accion_actor": "Transcurre ventana de gracia de 15 minutos sin confirmacion de toma",
+      "estado_notificacion": {
+        "id_notificacion": 9,
+        "pospuesta_veces": 2,
+        "estado_alerta": "vencida",
+        "notificar_cuidador": 1
+      },
+      "efecto_interfaz": "El sistema cambia la tarjeta a color rojo critico y dispara alerta de escalamiento al cuidador."
+    },
+    {
+      "paso": 5,
+      "marca_tiempo": "2026-11-16 21:42:00",
+      "evento": "ENVIO_ALERTA_CUIDADOR",
+      "accion_actor": "Motor de mensajeria envia notificacion push/SMS a Roberto Sanchez Morales (5544332211)",
+      "mensaje_enviado": "Alerta MedHealth: El paciente Carlos Ruiz no ha confirmado la toma de Tramadol 50 mg programada a las 21:00.",
+      "canal": "SMS_Y_PUSH"
+    },
+    {
+      "paso": 6,
+      "marca_tiempo": "2026-11-16 21:45:00",
+      "evento": "RESOLUCION_FINAL_OMISION",
+      "accion_actor": "El cuidador se comunica con el paciente y registra la omision justificada",
+      "registro_historial": {
+        "id_toma": 12,
+        "id_medicamento": 5,
+        "fecha_hora": "2026-11-16 21:45:00",
+        "estado": "no_tomado",
+        "observaciones": "Omision voluntaria por presencia de nauseas leves."
+      },
+      "estado_final_notificacion": {
+        "id_notificacion": 9,
+        "id_toma": 12,
+        "estado_alerta": "vencida",
+        "notificar_cuidador": 1
+      }
+    }
+  ]
+}

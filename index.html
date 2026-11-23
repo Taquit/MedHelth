@@ -3,33 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenido - Cuidate+</title>
-    
-    <link rel="stylesheet" href="CSS/style.css">
-    <link rel="stylesheet" href="CSS/bienvenida.css">
+    <title>MedHealth - Tus medicamentos, siempre a tiempo</title>
+    <link rel="stylesheet" href="assets/css/medhealth.css">
 </head>
 <body>
+    <div class="public-shell">
+        <header class="public-topbar">
+            <a href="index.html" class="brand-link">
+                <span class="brand-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
+                <span>MedHealth</span>
+            </a>
+            <nav class="topbar-actions" aria-label="Accesos públicos">
+                <a href="views/terminos.html" class="topbar-link">Términos y privacidad</a>
+                <a href="views/login.html" class="topbar-link">Iniciar sesión</a>
+            </nav>
+        </header>
 
-    <main class="welcome-container">
-        
-        <div class="welcome-content">
-            <div class="brand-section">
-                <div class="logo-image">
-                    <img src="./Recursos/logo.png" alt="Logo Cuidate+">
+        <main class="public-main">
+            <div class="hero-grid">
+                <section class="hero-copy">
+                    <h1 class="text-display">Tus medicamentos, siempre a tiempo y sin dudas.</h1>
+                    <p class="cuerpo-grande text-muted">
+                        Un horario diario con letras grandes y contraste claro para confirmar cada toma con un solo clic, llevar tu reporte PDF a consulta y mantener cerca a tu cuidador de confianza.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="views/registro_paciente.html" class="btn btn-primario">Crear mi cuenta</a>
+                        <a href="views/login.html" class="btn btn-secundario">Iniciar sesión</a>
+                    </div>
+
+                    <div class="trust-rules" aria-label="Garantías de claridad">
+                        <div class="trust-rule-item">
+                            <strong>Lectura sin esfuerzo</strong>
+                            <span>Horas grandes, contraste alto y botones claros en cada pantalla.</span>
+                        </div>
+                        <div class="trust-rule-item">
+                            <strong>Reporte PDF listo</strong>
+                            <span>Descarga tu historial de tomas para mostrarlo en tu consulta médica.</span>
+                        </div>
+                        <div class="trust-rule-item">
+                            <strong>Cuidador vinculado</strong>
+                            <span>Guarda los datos de tu familiar o persona de apoyo en tu cuenta.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="schedule-preview" aria-label="Ejemplo ilustrativo del horario diario en MedHealth">
+                    <div class="schedule-preview-bar">
+                        <strong>Tu horario diario</strong>
+                        <span>Ejemplo ilustrativo</span>
+                    </div>
+
+                    <div class="schedule-preview-row">
+                        <div class="preview-hour">08:00</div>
+                        <div>
+                            <div class="preview-med">Metformina 850 mg</div>
+                            <div class="preview-meta">Vía oral · Con el desayuno</div>
+                        </div>
+                        <span class="preview-pill preview-pill-ok">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                            Tomado hoy
+                        </span>
+                    </div>
+
+                    <div class="schedule-preview-row is-due">
+                        <div class="preview-hour">14:00</div>
+                        <div>
+                            <div class="preview-med">Losartán 50 mg</div>
+                            <div class="preview-meta">Vía oral · 1 tableta con agua</div>
+                        </div>
+                        <div class="preview-actions">
+                            <span class="preview-pill preview-pill-act">Se tomó</span>
+                            <span class="preview-pill preview-pill-sec">Posponer 5 min</span>
+                        </div>
+                    </div>
+
+                    <div class="schedule-preview-row">
+                        <div class="preview-hour">20:00</div>
+                        <div>
+                            <div class="preview-med">Atorvastatina 20 mg</div>
+                            <div class="preview-meta">Vía oral · Antes de dormir</div>
+                        </div>
+                        <span class="preview-pill preview-pill-sec">Pendiente</span>
+                    </div>
+                </aside>
+            </div>
+
+            <section class="how-band" aria-label="Cómo funciona MedHealth">
+                <div class="how-step">
+                    <h2>1. Registra tus tratamientos</h2>
+                    <p class="cuerpo text-muted">Anota el nombre, dosis, hora de primera toma y duración una sola vez; MedHealth organiza tu lista diaria.</p>
                 </div>
-                <h1 class="brand-name">CUIDATE+</h1>
-                <p class="brand-slogan">CUIDAMOS DE TI Y DE LOS QUE TE CUIDAN</p>
-            </div>
+                <div class="how-step">
+                    <h2>2. Confirma o pospón al instante</h2>
+                    <p class="cuerpo text-muted">Marca cada medicina como tomada, pospón la alerta 5 minutos o registra el motivo si no la pudiste tomar.</p>
+                </div>
+                <div class="how-step">
+                    <h2>3. Comparte tu avance en consulta</h2>
+                    <p class="cuerpo text-muted">Consulta tu historial cronológico y descarga un archivo PDF claro para tu médico y tu familia.</p>
+                </div>
+            </section>
+        </main>
 
-            <h2 class="welcome-message">"Bienvenido"</h2>
-
-            <div class="button-group">
-                <a href="views/registro_paciente.html" class="btn-welcome">Registrarse</a>
-                <a href="views/login.html" class="btn-welcome">Iniciar sesión</a>
-            </div>
-        </div>
-
-    </main>
-
+        <footer class="public-footer">
+            <span>MedHealth es una herramienta personal de seguimiento de tomas y no sustituye la orientación médica profesional.</span>
+            <a href="views/terminos.html" class="cuerpo-bold">Consultar términos y privacidad</a>
+        </footer>
+    </div>
 </body>
 </html>

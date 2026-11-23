@@ -2,96 +2,105 @@
 include_once __DIR__ . '/../includes/auth.php';
 
 requireLogin('login.html');
-$activePage = 'perfil';
+
+$error = $_GET['error'] ?? '';
+$mensajeError = '';
+if ($error === 'correo_duplicado') {
+    $mensajeError = 'El correo ingresado para el cuidador ya existe en el sistema.';
+} elseif ($error === 'registro') {
+    $mensajeError = 'Ocurrió un problema al guardar al cuidador. Verifica los datos e inténtalo de nuevo.';
+}
+
+$activePage = 'cuidador';
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Cuidador - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/perfil_cuidador.css">
+    <title>Registrar cuidador - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
 
     <?php include __DIR__ . '/../includes/navbar.php'; ?>
 
-    <div class="background-content">
-        <main class="profile-container">
-            <aside class="profile-sidebar">
-                <a href="perfil.php" class="sidebar-btn">Datos Paciente</a>
-                <button class="sidebar-btn active">Cuidador</button>
-            </aside>
+    <header class="page-header">
+        <div class="page-header-text">
+            <h1>Registrar nuevo cuidador</h1>
+            <p class="cuerpo text-muted">Captura los datos de contacto y crea su cuenta de acceso.</p>
+        </div>
+    </header>
 
-            <section class="profile-card">
-                <h2>Registrar Nuevo Cuidador</h2>
-                
-                <form action="../controllers/registrar_cuidador.php" method="POST" class="profile-layout">
-                    <div class="avatar-column">
-                        <div class="avatar-circle">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                        </div>
-                        <p style="text-align:center; font-size:0.9rem; margin-top:10px; color:#666;">
-                            El cuidador tendrá su propio acceso al sistema.
-                        </p>
+    <section class="tarjeta tarjeta-form tarjeta-900">
+        <div class="aviso aviso-alerta" style="margin-bottom: 24px;">
+            <?php echo medhealthIcon('alert-triangle', 24); ?>
+            <span>Si ya tienes un cuidador activo, se dará de baja automáticamente al registrar uno nuevo.</span>
+        </div>
+
+        <?php if ($mensajeError !== ''): ?>
+            <div class="aviso aviso-error" role="alert" aria-live="polite" style="margin-bottom: 24px;">
+                <?php echo medhealthIcon('alert-triangle', 24); ?>
+                <span><?php echo htmlspecialchars($mensajeError); ?></span>
+            </div>
+        <?php endif; ?>
+
+        <form action="../controllers/registrar_cuidador.php" method="POST" class="form-stack">
+            <input type="hidden" name="origen" value="alta">
+
+            <div class="form-grid-2">
+                <div class="campo">
+                    <label for="nombre">Nombre(s)</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Carlos" required>
+                </div>
+
+                <div class="campo">
+                    <label for="paterno">Apellido paterno</label>
+                    <input type="text" id="paterno" name="paterno" placeholder="Ej. Pérez" required>
+                </div>
+
+                <div class="campo">
+                    <label for="materno">Apellido materno</label>
+                    <input type="text" id="materno" name="materno" placeholder="Ej. López">
+                </div>
+
+                <div class="campo">
+                    <label for="parentesco">Parentesco</label>
+                    <div class="select-wrapper">
+                        <select id="parentesco" name="parentesco" required>
+                            <option value="">Selecciona una opción</option>
+                            <option value="Familiar">Familiar</option>
+                            <option value="Enfermero/a">Enfermero/a</option>
+                            <option value="Amigo/a">Amigo/a</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                        <span class="select-chevron"><?php echo medhealthIcon('chevron-down', 24); ?></span>
                     </div>
+                </div>
 
-                    <div class="form-column">
-                        <div class="form-group">
-                            <label for="nombre">Nombre(s)</label>
-                            <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan">
-                        </div>
+                <div class="campo">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="Ej. 55 1234 5678" required>
+                </div>
 
-                        <div class="row-group" style="display:flex; gap:10px;">
-                            <div class="form-group" style="flex:1;">
-                                <label for="paterno">Apellido Paterno</label>
-                                <input type="text" id="paterno" name="paterno" required placeholder="Ej. Pérez">
-                            </div>
-                            <div class="form-group" style="flex:1;">
-                                <label for="materno">Apellido Materno</label>
-                                <input type="text" id="materno" name="materno" placeholder="Ej. López">
-                            </div>
-                        </div>
+                <div class="campo<?php echo ($error === 'correo_duplicado') ? ' campo-error' : ''; ?>">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" placeholder="cuidador@correo.com" required>
+                </div>
 
-                        <div class="row-group" style="display:flex; gap:10px;">
-                            <div class="form-group" style="flex:1;">
-                                <label for="parentesco">Parentesco</label>
-                                <select id="parentesco" name="parentesco" required style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;">
-                                    <option value="">Seleccione...</option>
-                                    <option value="Familiar">Familiar</option>
-                                    <option value="Enfermero/a">Enfermero/a</option>
-                                    <option value="Amigo/a">Amigo/a</option>
-                                    <option value="Otro">Otro</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="flex:1;">
-                                <label for="telefono">Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono" required placeholder="55 1234 5678">
-                            </div>
-                        </div>
+                <div class="campo col-span-2">
+                    <label for="password">Contraseña para su cuenta</label>
+                    <input type="password" id="password" name="password" placeholder="Crea una contraseña temporal" required>
+                    <span class="campo-ayuda">Compártela con tu cuidador para que pueda entrar.</span>
+                </div>
+            </div>
 
-                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-                        <h4>Datos de Acceso del Cuidador</h4>
-                        <div class="form-group">
-                            <label for="email">Correo Electrónico</label>
-                            <input type="email" id="email" name="email" required placeholder="cuidador@email.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Contraseña Temporal</label>
-                            <input type="password" id="password" name="password" required placeholder="********">
-                        </div>
-
-                        <div class="caregiver-actions" style="margin-top:20px;">
-                            <button type="submit" class="btn-action btn-alta" style="width:100%;">Registrar y Asignar</button>
-                            <a href="perfil_cuidador.php" class="btn-action btn-baja" style="text-decoration:none; text-align:center; display:inline-block; margin-top:10px;">Cancelar</a>
-                        </div>
-                    </div>
-                </form>
-            </section>
-        </main>
-    </div>
+            <div class="form-actions-row">
+                <button type="submit" class="btn btn-primario">Guardar cuidador</button>
+                <a href="perfil_cuidador.php" class="btn btn-secundario">Cancelar</a>
+            </div>
+        </form>
+    </section>
 
     <?php include __DIR__ . '/../includes/footer.php'; ?>
 

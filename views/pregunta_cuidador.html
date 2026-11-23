@@ -3,27 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Tienes Cuidador? - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/pregunta_cuidador.css">
+    <title>¿Tienes un cuidador? - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
+    <div class="public-shell">
+        <header class="public-topbar">
+            <a href="../index.html" class="brand-link">
+                <span class="brand-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
+                <span>MedHealth</span>
+            </a>
+            <a href="terminos.html" class="topbar-link">Términos y privacidad</a>
+        </header>
 
-    <main class="question-container">
-        <div class="question-card">
-            <h2>¿Tienes un cuidador que te ayudará con tus medicamentos?</h2>
-            
-            <div class="purpose-box">
-                <strong>Propósito</strong>
-                <p>Recolectar información si el paciente tiene un cuidador</p>
-            </div>
+        <main class="public-main">
+            <section style="display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; max-width: 960px;">
+                <div class="icon-halo-exito">
+                    <span class="icon-circle-116">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                </div>
 
-            <div class="button-group">
-                <a href="registro_cuidador_inicial.html" class="btn-yes">Sí</a>
-                <a href="dashboard.php" class="btn-no">No, Finalizar</a>
-            </div>
-        </div>
-    </main>
+                <h1 id="titulo-bienvenida" aria-live="polite">¡Tu cuenta está lista!</h1>
+                <p class="cuerpo-grande text-muted" style="margin-top: 12px; max-width: 680px;">
+                    ¿Tienes un familiar o cuidador que te ayudará a supervisar tus medicamentos?
+                </p>
 
+                <div class="cards-pair">
+                    <article class="tarjeta tarjeta-440 choice-card">
+                        <div>
+                            <h2 style="margin-bottom: 12px;">Sí, tengo un cuidador</h2>
+                            <p class="cuerpo text-muted">Registra sus datos de contacto y crea su acceso al sistema.</p>
+                        </div>
+                        <a href="registro_cuidador_inicial.html" class="btn btn-primario btn-block">Sí, registrar a mi cuidador</a>
+                    </article>
+
+                    <article class="tarjeta tarjeta-440 choice-card">
+                        <div>
+                            <h2 style="margin-bottom: 12px;">Ahora no</h2>
+                            <p class="cuerpo text-muted">Puedes entrar a tu panel y registrar a un cuidador cuando quieras.</p>
+                        </div>
+                        <a href="dashboard.php" class="btn btn-secundario btn-block">Lo haré más tarde</a>
+                    </article>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var nombre = params.get('nombre');
+        if (nombre && nombre.trim() !== '') {
+            document.getElementById('titulo-bienvenida').textContent = '¡Tu cuenta está lista, ' + nombre.trim() + '!';
+        }
+    })();
+    </script>
 </body>
 </html>

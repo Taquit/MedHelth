@@ -3,66 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Posponer Alerta - Cuidate+</title>
-    <link rel="stylesheet" href="../CSS/style.css">
-    <link rel="stylesheet" href="../CSS/dashboard.css">
-    <link rel="stylesheet" href="../CSS/notificaciones.css">
+    <title>Alerta pospuesta - MedHealth</title>
+    <link rel="stylesheet" href="../assets/css/medhealth.css">
 </head>
 <body>
+    <div class="public-shell">
+        <header class="public-topbar">
+            <a href="dashboard.php" class="brand-link">
+                <span class="brand-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
+                <span>MedHealth</span>
+            </a>
+            <a href="dashboard.php" class="topbar-link">Ir a mi panel</a>
+        </header>
 
-    <div class="background-content">
-        <nav class="navbar">
-            <div class="logo">
-                <img src="../Recursos/logo.png" alt="Logo Cuidate+">
-                Cuidate+
-            </div>
-            <div class="nav-links">
-                <a href="dashboard.php" class="nav-item active">INICIO</a>
-                <a href="medicamentos.php" class="nav-item">MEDICAMENTOS</a>
-                <a href="historial.php" class="nav-item">HISTORIAL</a>
-            </div>
-            <div class="nav-right">
-                <a href="perfil.php" class="profile-link">
-                    <span class="profile-text">PERFIL</span>
-                    <div class="profile-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    </div>
-                </a>
-            </div>
-        </nav>
+        <main class="public-main">
+            <section class="tarjeta tarjeta-form tarjeta-560" style="text-align: center;" aria-live="polite">
+                <div class="icon-halo-alerta">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
 
-        <main class="dashboard-container">
-            <header class="dashboard-header">
-                <h1>¡ Hola!</h1>
-                <p class="date-display">Hoy es XX de Octubre del 2025</p>
-                <h2>Medicamentos del día de hoy</h2>
-            </header>
-            <section class="medication-list">
-                <article class="med-card">
-                    <div class="med-info">
-                        <div class="med-title-row"><h3>Nombre del Medicamento</h3></div>
-                        <div class="med-details-grid"><p><strong>Dosis:</strong> 1/2 tableta</p></div>
-                    </div>
-                    <aside class="med-actions"><h4>Confirmación</h4></aside>
-                </article>
+                <h1>Te lo recordaremos en 5 minutos</h1>
+                <p id="nueva-hora" class="cuerpo-grande text-muted" style="margin-top: 12px; margin-bottom: 32px;"></p>
+
+                <a href="dashboard.php" class="btn btn-primario btn-block">Volver a mi panel</a>
             </section>
         </main>
     </div>
 
-    <div class="notification-overlay">
-        <div class="notification-card">
-            <div class="icon-container postpone-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-            </div>
-
-            <h3>Se pospondrá la alerta<br>5 minutos</h3>
-
-            <a href="dashboard.php" class="btn-exit">Salir</a>
-        </div>
-    </div>
-
+    <script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var hora = (params.get('hora') || '').trim();
+        if (hora === '') {
+            var futura = new Date(Date.now() + 5 * 60 * 1000);
+            var hh = String(futura.getHours()).padStart(2, '0');
+            var mm = String(futura.getMinutes()).padStart(2, '0');
+            hora = hh + ':' + mm;
+        }
+        document.getElementById('nueva-hora').textContent = 'Nueva hora del recordatorio: ' + hora + '.';
+    })();
+    </script>
 </body>
 </html>

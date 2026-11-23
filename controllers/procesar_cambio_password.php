@@ -10,19 +10,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $usuario = new Usuario($db);
     $usuario->id_usuario = $_SESSION['id_usuario'];
 
-    $pass_actual = $_POST['current_password'];
-    $pass_nueva = $_POST['new_password'];
+    $pass_actual = $_POST['current_password'] ?? '';
+    $pass_nueva = $_POST['new_password'] ?? '';
+    $pass_confirm = $_POST['confirm_password'] ?? null;
+
+    if ($pass_actual === '' || $pass_nueva === '') {
+        header("Location: ../views/cambiar_contrasena.php?error=error_actualizar");
+        exit;
+    }
+
+    if ($pass_confirm !== null && $pass_nueva !== $pass_confirm) {
+        header("Location: ../views/cambiar_contrasena.php?error=no_coincide");
+        exit;
+    }
 
     $hash_actual_bd = $usuario->obtenerPasswordActual();
 
     if ($hash_actual_bd && password_verify($pass_actual, $hash_actual_bd)) {
         if ($usuario->actualizarPassword($pass_nueva)) {
-            echo "<script>alert('Contraseña actualizada correctamente.'); window.location.href='../views/perfil.php';</script>";
+            header("Location: ../views/perfil.php?exito=password");
+            exit;
         } else {
-            echo "<script>alert('Error al actualizar.'); window.location.href='../views/cambiar_contrasena.php';</script>";
+            header("Location: ../views/cambiar_contrasena.php?error=error_actualizar");
+            exit;
         }
     } else {
-        echo "<script>alert('La contraseña actual es incorrecta.'); window.location.href='../views/cambiar_contrasena.php';</script>";
+        header("Location: ../views/cambiar_contrasena.php?error=actual_incorrecta");
+        exit;
     }
 } else {
     header("Location: ../views/cambiar_contrasena.php");
